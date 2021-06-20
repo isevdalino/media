@@ -1,0 +1,11 @@
+export const SIGN_IN = "/sign-in";
+export const SIGN_UP = "/sign-up";
+export const HOME = "/home";
+export const ARTICLES = "/articles";
+export const CREATE_ARTICLE = "/create-article";
+export const PHOTO_ARTICLES = "/photo-articles";
+export const CREATE_PHOTO_ARTICLE = "/create-photo-article";
+export const CREATE_POLL = "/create-poll";
+export const POLLS = "/polls";
+export const CREATE_EVENT = "/create-event";
+export const SEARCH = "/search";
