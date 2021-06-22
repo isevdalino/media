@@ -5,7 +5,6 @@ import './components/login/loginStyles.css';
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 import Login from "./components/login/login.component";
-import SignUp from "./components/login/signup.component";
 import { HomePage } from "./components/home/HomePage";
 import { Articles } from "./components/articles/Articles";
 import { PhotoArticles } from "./components/photo-articles/PhotoArticles";

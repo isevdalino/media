@@ -6,4 +6,4 @@ export class Article {
         this.content = content;
         this.topics = topics;
     }
-}
+};

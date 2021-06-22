@@ -1,11 +1,28 @@
 import React, { useState } from 'react';
 import { minMaxLength, validEmail, passwordStrength, userExists, } from './validations';
 import './loginStyles.css';
+import { SERVER_ADDRESS } from '../../constants/Paths';
 
 function SignupView() {
     const [user, setUser] = useState({});
     const [formErrors, setFormErrors] = useState({});
     const [errorUiList, setErrorUiList] = useState([]);
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        const body = JSON.stringify({ name: user.username, email: user.email, password: user.password, password2: user.confirmpassword });
+        console.log(body);
+
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: body
+        };
+        fetch(SERVER_ADDRESS + "users/register", requestOptions)
+            .then(response => response.json())
+            .then(data => console.log(data));
+    }
 
     const changeErrorsWith = function (newErrors) {
         setFormErrors(newErrors);
@@ -41,6 +58,7 @@ function SignupView() {
                     currentFormErrors[name] = `Username should have minimum 3 characters`;
                 } else {
                     delete currentFormErrors[name];
+                    setUser({ ...user, username: value });
                 }
 
                 break;
@@ -48,14 +66,8 @@ function SignupView() {
                 if (!value || !validEmail(value)) {
                     currentFormErrors[name] = `Email address is invalid`;
                 } else {
-                    userExists(value).then((result) => {
-                        if (result) {
-                            currentFormErrors[name] =
-                                'The email is already registered. Please use a different email.';
-                        } else {
-                            delete currentFormErrors[name];
-                        }
-                    });
+                    delete currentFormErrors[name];
+                    setUser({ ...user, email: value });
                 }
                 break;
             case 'password':
@@ -103,7 +115,7 @@ function SignupView() {
             <div className="auth-inner" >
                 <h3>New User Registration Form</h3>
                 <ul>{errorUiList}</ul>
-                <form noValidate>
+                <form noValidate onSubmit={handleSubmit}>
                     <div>
                         <label htmlFor='username'>Username</label>
                         <input

@@ -1,4 +1,4 @@
-import React, { useState, Component } from "react";
+import React, { useState, Component, useEffect } from "react";
 import ArticleList from '../articles/ArticleList';
 import MOCK_ARTICLES from '../../mock-data/mock-articles';
 import MOCK_TOPICS from '../../mock-data/mock-topics';
@@ -9,7 +9,8 @@ import { containerStyleSheet } from '../articles/articlesStyles.js'
 import TopicList from "../topics/TopicList";
 import PhotoArticleList from "../photo-articles/PhotoArticleList";
 import PollList from "../polls/PollList";
-import { ARTICLES, PHOTO_ARTICLES, POLLS } from "../../constants/Paths";
+import { ARTICLES, PHOTO_ARTICLES, POLLS, SERVER_ADDRESS } from "../../constants/Paths";
+import { Article } from "../../models/article";
 
 function HomePage() {
     const [articles, setArticles] = useState(MOCK_ARTICLES);
@@ -19,6 +20,21 @@ function HomePage() {
     const [photoArticles, setPhotoArticles] = useState(MOCK_PHOTO_ARTICLES);
 
     const [polls, setPolls] = useState(MOCK_POLLS);
+
+    useEffect(() => {
+        const requestOptions = {
+            method: 'GET'
+        };
+
+        fetch(SERVER_ADDRESS + "articles?limit=8", requestOptions)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                setArticles(data.map(article =>
+                    new Article(article._id, article.name, article.authorName, article.content, article.topic)
+                ));
+            });
+    });
 
     const containerStyle = containerStyleSheet();
     const buttonStyle = {

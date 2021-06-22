@@ -3,4 +3,4 @@ export class Rating {
         this.id = id;
         this.rating = rating;
     }
-}
+};

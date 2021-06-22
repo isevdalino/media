@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { articleViewContainerStyleSheet, authorStyleSheet, contentStyleSheet, titleStyleSheet } from "./articlesStyles";
 import ReactStars from "react-rating-stars-component";
+import { useParams } from "react-router";
+import { SERVER_ADDRESS } from "../../constants/Paths";
 
 function ArticleView({ article }) {
   const articleViewContainerStyle = articleViewContainerStyleSheet();
@@ -8,24 +10,33 @@ function ArticleView({ article }) {
   const authorStyle = authorStyleSheet();
   const contentStyle = contentStyleSheet();
 
-  let [canEdit, setCanEdit] = useState(true);
+  let [rating, setRating] = useState(0);
+  let { id } = useParams();
 
-  const validateNewRating = function (value, edit) {
+  useEffect(() => {
+    const requestOptions = {
+      method: 'GET'
+    };
+
+    fetch(SERVER_ADDRESS + "ratings/" + id, requestOptions)
+      .then(response => response.json())
+      .then(data => setRating(data.rating));
+  }, [rating]);
+
+  const validateNewRating = function (value) {
     return {
       size: 40,
       count: 10,
       isHalf: false,
-      edit: edit,
+      edit: true,
       value: value
     };
   };
 
-  let initialRating = validateNewRating(article.rating, canEdit);
-  let [rating, setRating] = useState(initialRating);
+  let [ratingView, setRatingView] = useState(validateNewRating(0));
 
-  const onChangeRating = function (newValue, canEdit) {
-    setCanEdit(false);
-    setRating(validateNewRating(newValue, canEdit));
+  const onChangeRating = function (newValue) {
+    setRatingView(validateNewRating(newValue));
     console.log(`Rating: the new value is ${newValue}`);
   };
 
@@ -37,11 +48,11 @@ function ArticleView({ article }) {
   return (
     <div style={articleViewContainerStyle}>
       <h3 style={titleStyle}>{article.title}</h3>
-      <div style={authorStyle}>--- {article.author} ---</div>
+      <div style={authorStyle}>--- {article.authorName} ---</div>
       <p style={contentStyle}>{article.content}</p>
-      <ReactStars {...rating} onChange={(value) => onChangeRating(value, canEdit)} />
+      <ReactStars {...ratingView} onChange={(value) => onChangeRating(value)} />
       <div style={midRatingStyle}>
-        Rating: {article.rating}/10.0
+        Rating: {rating}/10.0
       </div>
     </div>
   );
