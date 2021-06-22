@@ -5,7 +5,7 @@ import { containerStyleSheet, createArticleButtonStyleSheet, createArticleIconSt
 import { CREATE_POLL } from "../../constants/Paths";
 import { Link } from "react-router-dom";
 
-function Polls() {
+function ShowAllPollsView() {
 
     const [polls, setPolls] = useState(MOCK_POLLS);
     const containerStyle = containerStyleSheet();
@@ -27,4 +27,4 @@ function Polls() {
     );
 }
 
-export { Polls };
+export { ShowAllPollsView };

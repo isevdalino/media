@@ -1,32 +1,21 @@
-import React, { useState, Component, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import ArticleList from './ArticleList';
-import MOCK_ARTICLES from '../../mock-data/mock-articles';
 import { containerStyleSheet, createArticleButtonStyleSheet, createArticleIconStyleSheet } from './articlesStyles.js'
 import { Link } from "react-router-dom";
-import { CREATE_ARTICLE, SERVER_ADDRESS } from "../../constants/Paths";
-import { Article } from "../../models/article";
+import { CREATE_ARTICLE } from "../../constants/Paths";
+import MOCK_ARTICLES from "../../mock-data/mock-articles";
+import { fetchArticles } from "../../server-requests/requests";
 
-function Articles() {
-
-    const [articles, setArticles] = useState(MOCK_ARTICLES);
+function ShowAllArticlesView() {
     const containerStyle = containerStyleSheet();
     const buttonStyle = createArticleButtonStyleSheet();
     const addArticleIconStyle = createArticleIconStyleSheet();
 
-    useEffect(() => {
-        const requestOptions = {
-            method: 'GET'
-        };
+    const [articles, setArticles] = useState(MOCK_ARTICLES);
 
-        fetch(SERVER_ADDRESS + "articles?limit=8", requestOptions)
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
-                setArticles(data.map(article =>
-                    new Article(article._id, article.name, article.authorName, article.content, article.topic)
-                ));
-            });
-    });
+    useEffect(() => {
+        fetchArticles().then(newArticles => setArticles(newArticles));
+    }, []);
 
     return (
         <div>
@@ -44,4 +33,4 @@ function Articles() {
     );
 }
 
-export { Articles };
+export { ShowAllArticlesView };

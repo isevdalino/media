@@ -1,28 +1,41 @@
 import React, { useState } from 'react';
 import { minMaxLength, validEmail, passwordStrength, userExists, } from './validations';
 import './loginStyles.css';
-import { SERVER_ADDRESS } from '../../constants/Paths';
+import { SERVER_ADDRESS, SIGN_IN } from '../../constants/Paths';
+import { useHistory } from 'react-router';
 
 function SignupView() {
     const [user, setUser] = useState({});
     const [formErrors, setFormErrors] = useState({});
     const [errorUiList, setErrorUiList] = useState([]);
+    const history = useHistory();
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
         const body = JSON.stringify({ name: user.username, email: user.email, password: user.password, password2: user.confirmpassword });
-        console.log(body);
-
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: body
         };
         fetch(SERVER_ADDRESS + "users/register", requestOptions)
-            .then(response => response.json())
-            .then(data => console.log(data));
-    }
+            .then(response => {
+                if (response.ok)
+                    return response.json();
+                else
+                    throw new Error(response.statusText);
+            })
+            .then(data => {
+                console.log(data);
+                history.push(SIGN_IN);
+            })
+            .catch((error) => {
+                console.log('error: ' + error.message);
+                const errors = formErrors || {};
+                errors.servererror = error.message;
+                changeErrorsWith(errors);
+            });
+    };
 
     const changeErrorsWith = function (newErrors) {
         setFormErrors(newErrors);
@@ -31,7 +44,7 @@ function SignupView() {
             key => (<li key={key} className="error-style">{formErrors[key]}</li>)
         );
         setErrorUiList(errorList);
-    }
+    };
 
     const validateConfirmPassword = function (password, confirmpassword) {
         const errors = formErrors || {};
@@ -177,7 +190,7 @@ function SignupView() {
                         />
                     </div>
                     <div>
-                        <button type='submit' className="btn btn-primary btn-block" disabled={Object.entries(formErrors || {}).length > 0}>
+                        <button type='submit' className="btn btn-primary btn-block">
                             Create Account
                     </button>
                     </div>

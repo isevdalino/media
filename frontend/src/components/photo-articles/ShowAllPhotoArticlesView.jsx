@@ -5,7 +5,7 @@ import { containerStyleSheet, createArticleButtonStyleSheet, createArticleIconSt
 import { Link } from "react-router-dom";
 import { CREATE_PHOTO_ARTICLE } from "../../constants/Paths";
 
-function PhotoArticles() {
+function ShowAllPhotoArticlesView() {
 
     const [photoArticles, setPhotoArticles] = useState(MOCK_PHOTO_ARTICLES);
     const containerStyle = containerStyleSheet();
@@ -27,4 +27,4 @@ function PhotoArticles() {
     );
 }
 
-export { PhotoArticles };
+export { ShowAllPhotoArticlesView };

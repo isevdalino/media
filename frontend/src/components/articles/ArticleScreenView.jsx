@@ -22,7 +22,7 @@ function ArticleScreenView() {
         fetch(SERVER_ADDRESS + "articles/" + id, requestOptions)
             .then(response => response.json())
             .then(data => setArticle(new Article(data._id, data.name, data.authorName, data.content, data.topic)));
-    }, [article]);
+    }, []);
 
     let comment = MOCK_COMMENTS;
 
