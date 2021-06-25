@@ -1,9 +1,9 @@
 export class Article {
-    constructor(id, title, authorName, content, topics) {
+    constructor(id, title, authorName, content, topic) {
         this.id = id;
         this.title = title;
         this.authorName = authorName;
         this.content = content;
-        this.topics = topics;
+        this.topic = topic;
     }
 };

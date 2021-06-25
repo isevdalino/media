@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { articleViewContainerStyleSheet, authorStyleSheet, contentStyleSheet, titleStyleSheet } from "./articlesStyles";
+import { articleViewContainerStyleSheet, authorStyleSheet, contentStyleSheet, titleStyleSheet, topicLinkStyleSheet } from "./articlesStyles";
 import ReactStars from "react-rating-stars-component";
 import { useParams } from "react-router";
-import { SERVER_ADDRESS } from "../../constants/Paths";
+import { SEARCH, SERVER_ADDRESS } from "../../constants/Paths";
 
 function ArticleView({ article }) {
   const articleViewContainerStyle = articleViewContainerStyleSheet();
   const titleStyle = titleStyleSheet();
   const authorStyle = authorStyleSheet();
   const contentStyle = contentStyleSheet();
+  const topicLinkStyle = topicLinkStyleSheet();
 
   let [rating, setRating] = useState(0);
   let { id } = useParams();
@@ -50,6 +51,7 @@ function ArticleView({ article }) {
       <h3 style={titleStyle}>{article.title}</h3>
       <div style={authorStyle}>--- {article.authorName} ---</div>
       <p style={contentStyle}>{article.content}</p>
+      <p><a href={SEARCH + '?t=' + article.topic} style={topicLinkStyle}>{article.topic}</a></p>
       <ReactStars {...ratingView} onChange={(value) => onChangeRating(value)} />
       <div style={midRatingStyle}>
         Rating: {rating}/10.0

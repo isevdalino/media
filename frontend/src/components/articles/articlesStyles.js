@@ -93,8 +93,14 @@ function createArticleIconStyleSheet() {
     };
 }
 
+function topicLinkStyleSheet() {
+    return {
+        float: "right",
+    };
+}
+
 export {
     containerStyleSheet, cardStyleSheet, cardPhotoStyleSheet, photoStyleSheet, cardContainerStyleSheet,
     articleViewContainerStyleSheet, titleStyleSheet, authorStyleSheet, contentStyleSheet, createArticleButtonStyleSheet,
-    createArticleIconStyleSheet
+    createArticleIconStyleSheet, topicLinkStyleSheet
 };

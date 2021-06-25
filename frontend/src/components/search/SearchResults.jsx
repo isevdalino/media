@@ -8,8 +8,10 @@ import { fetchArticles } from "../../server-requests/requests";
 
 function SearchResults() {
     const { search } = window.location;
-    const query = new URLSearchParams(search).get('s');
-    const [searchQuery, setSearchQuery] = useState(query || '');
+    const searchByStringQuery = new URLSearchParams(search).get('s');
+    const searchByTopicQuery = new URLSearchParams(search).get('t');
+
+    const [searchQuery, setSearchQuery] = useState(searchByStringQuery || searchByTopicQuery || '');
 
     console.log("searchQuery: " + searchQuery);
 
