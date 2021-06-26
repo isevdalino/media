@@ -1,58 +1,76 @@
 import { useParams } from "react-router-dom";
-import MOCK_POLLS from '../../mock-data/mock-polls';
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { articleViewContainerStyleSheet } from "../articles/articlesStyles";
 import "./pollStyles.css";
+import { fetchPoll, putPoll } from "../../server-requests/requests";
 
 function PollView() {
     let { id } = useParams();
-    let initialState = MOCK_POLLS.find(poll => poll.id == id);
-    const [poll, setPoll] = useState(initialState);
+    const [poll, setPoll] = useState([]);
+    const [voted, setVoted] = useState(false);
+    const [totalVotes, setTotalVotes] = useState(0);
+    const [pollOptions, setPollOptions] = useState([]);
 
-    const sumOfTotalVotes = poll.answers
+    useEffect(() => {
+        fetchPoll(id).then(poll => {
+            setPoll(poll)
+            setTotalVotes(getSumOfTotalVotes(poll))
+            setVoted(hasUserVoted(poll))
+            setPollOptions(getPollOptions(poll))
+        });
+    }, []);
+
+    function getSumOfTotalVotes(poll){
+        return poll.answers
         .map(answer => answer.votes)
         .reduce((accumulator, currentValue) => accumulator + parseInt(currentValue));
+    }
 
-    const [totalVotes, setTotalVotes] = useState(sumOfTotalVotes);
-
-    const [voted, setVoted] = useState(poll.hasUserVoted);
-
-    const submitVote = (e) => {
+    function hasUserVoted(poll){
+        const hasUserVoted = false;
+        for (var index in poll.voters) {
+            if (poll.voters[index] ==  localStorage.getItem('userEmail')){
+                hasUserVoted=true;
+                break;
+            }
+        }
+        return hasUserVoted
+    }
+    
+    function submitVote (event,poll) {
         if (voted === false) {
-            const voteSelected = e.target.dataset.id;
-            const voteCurrent = poll.answers[voteSelected].votes;
-            poll.answers[voteSelected].votes = voteCurrent + 1;
-            setTotalVotes(totalVotes + 1);
-            setVoted(true);
+            const voteSelected = event.target.dataset.id;
+            var answer
+            for (var index in poll.answers) {
+                if (poll.answers[index]._id == voteSelected ){
+                    answer = poll.answers[index].name;
+                    break;
+                }
+            }
 
-            // const options = {
-            //     method: "POST",
-            //     body: JSON.stringify(voteData),
-            //     headers: { "Content-Type": "application/json" },
-            // };
-            // fetch(url, options)
-            //     .then((res) => res.json())
-            //     .then((res) => console.log(res));
+            // const voteCurrent = poll.answers[voteSelected].votes;
+            // poll.answers[voteSelected].votes = voteCurrent + 1;
+            // setTotalVotes(totalVotes + 1);
+            // setVoted(true);
+            putPoll(poll.id,answer)
         }
     };
 
-
     const articleViewContainerStyle = articleViewContainerStyleSheet();
 
-    let pollOptions;
-    if (poll.answers) {
-        pollOptions = poll.answers.map((item) => {
-            return (
-                <li key={item.id}>
-                    <button onClick={submitVote} data-id={item.id}>
-                        {item.option}
-                        <span>- {item.votes} Votes</span>
-                    </button>
-                </li>
-            );
-        });
+    function getPollOptions(poll){
+       return poll.answers.map((item) => {
+                return (
+                    <li key={item._id}>
+                        <button onClick={(event) => submitVote(event,poll)} data-id={item._id}>
+                            {item.name} - {item.votes} Votes
+                        </button>
+                    </li>
+                );
+            });
     }
 
+    
     return (
         <div style={articleViewContainerStyle} >
             <div className="poll">

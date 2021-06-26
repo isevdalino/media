@@ -11,7 +11,7 @@ const TopicList = ({ topics }) => {
     return (
         <div style={container}>
             {topics.map(topic => (
-                <Topic key={topic.id} topic={topic} />
+                <Topic key={topic.id} topic={topic.name} />
             ))}
         </div>
     );

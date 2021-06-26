@@ -1,6 +1,7 @@
-import React from "react";
+import React,{ useState } from "react";
 import { articleViewContainerStyleSheet } from "./articlesStyles";
-import { useForm } from "react-hook-form";
+import { SERVER_ADDRESS } from '../../constants/Paths';
+import { useHistory } from 'react-router';
 
 function CreateArticleView() {
     const articleViewContainerStyle = articleViewContainerStyleSheet();
@@ -13,25 +14,68 @@ function CreateArticleView() {
         margin: "15px"
     };
 
-    const { register, handleSubmit, watch, formState: { errors } } = useForm();
-    const onSubmit = data => console.log(data);
+    const [register, setRegister] = useState({});
+    const [formErrors, setFormErrors] = useState({});
+    const [errorUiList, setErrorUiList] = useState([]);
+    const history = useHistory();
 
-    // console.log(watch("title")); // watch input value by passing the name of it
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        const body = JSON.stringify({ name: register.title, topic: register.topic, content: register.content});
+        console.log(body);
+
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json','Authorization': localStorage.getItem('loginToken')},
+            body: body
+        };
+        fetch(SERVER_ADDRESS + "articles", requestOptions)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+                history.push("/articles/"+data._id);
+            })
+    }
+    const changeErrorsWith = function (newErrors) {
+        setFormErrors(newErrors);
+
+        let errorList = Object.keys(formErrors).map(
+            key => (<li key={key} className="error-style">{formErrors[key]}</li>)
+        );
+        setErrorUiList(errorList);
+    }
+
+    const handleChange = function (e) {
+        const name = e.target.name;
+        const value = e.target.value;
+        let currentFormErrors = formErrors;
+
+        switch (name) {
+            case 'title':
+                setRegister({ ...register, title: value });
+                break;
+            case 'topic':
+                setRegister({ ...register, topic: value });
+                break;
+            case 'content':
+                setRegister({ ...register, content: value });
+                break;
+            default:
+                break;
+        }
+
+        changeErrorsWith(currentFormErrors);
+    };
 
     return (
-        /* "handleSubmit" will validate your inputs before invoking "onSubmit" */
         <div style={articleViewContainerStyle}>
             <h3 className="text-center">Create your new article</h3>
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form noValidate onSubmit={handleSubmit}>
                 <div style={inputStyle}>
-                    {/* register your input into the hook by invoking the "register" function */}
-                    <input style={inputFieldStyle} type="text" defaultValue="Title" {...register("title", { required: true })} />
-                    {errors.title && <span>This field is required</span>}
-
-                    {/* include validation with required or other standard HTML validation rules */}
-                    <textarea rows="15" cols="50" style={inputFieldStyle} type="text" defaultValue="Content" {...register("content", { required: true })} />
-                    {/* errors will return when field validation fails  */}
-                    {errors.content && <span>This field is required</span>}
+                    <input style={inputFieldStyle} placeholder='Title' type='text' name='title' noValidate onBlur={handleChange} />
+                    <input style={inputFieldStyle} placeholder='Topic' type='text' name='topic' noValidate  onBlur={handleChange}/>
+                    <textarea rows="15" cols="50" style={inputFieldStyle} placeholder='Content' type='text' name='content' noValidate onBlur={handleChange}/>
                 </div>
                 <input type="submit" />
             </form>

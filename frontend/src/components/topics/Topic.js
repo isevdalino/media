@@ -5,8 +5,7 @@ import { SEARCH } from '../../constants/Paths';
 const Topic = ({ topic }) => {
     const history = useHistory();
     const searchByTopic = () => {
-        console.log("Search by topic: " + topic.topic);
-        history.push(SEARCH + '?t=' + topic.topic);
+        history.push(SEARCH + '?t=' + topic);
     };
 
     const card = {
@@ -21,7 +20,7 @@ const Topic = ({ topic }) => {
 
     return (
         <div onClick={searchByTopic}>
-            <h4 style={card}>{topic.topic}</h4>
+            <h4 style={card}>{topic}</h4>
         </div>
     );
 }

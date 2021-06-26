@@ -1,17 +1,17 @@
 export class Poll {
-    constructor(id, question, authorName, hasUserVoted, answers) {
+    constructor(id, question, authorName, answers,voters) {
         this.id = id;
         this.question = question;
         this.authorName = authorName;
-        this.hasUserVoted = hasUserVoted;
         this.answers = answers;
+        this.voters = voters;
     }
 }
 
 export class Answer {
-    constructor(id, votes, option) {
+    constructor(id, votes, name) {
         this.id = id;
-        this.voted = votes;
-        this.option = option;
+        this.votes = votes;
+        this.name = name;
     }
 }

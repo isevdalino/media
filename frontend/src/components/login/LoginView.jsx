@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { validEmail } from './validations';
 import './loginStyles.css';
-import { SERVER_ADDRESS } from '../../constants/Paths';
+import { SERVER_ADDRESS ,HOME} from '../../constants/Paths';
+import { useHistory } from 'react-router';
 
 function LoginView() {
     const [user, setUser] = useState({});
     const [formErrors, setFormErrors] = useState({});
     const [errorUiList, setErrorUiList] = useState([]);
+    const history = useHistory();
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -21,7 +23,13 @@ function LoginView() {
         };
         fetch(SERVER_ADDRESS + "users/login", requestOptions)
             .then(response => response.json())
-            .then(data => console.log(data));
+            .then(data => {
+                console.log(data)
+                localStorage.setItem('loginToken', data.token)
+                localStorage.setItem('userEmail', user.email)
+
+                history.push(HOME);
+            })
     }
 
     const changeErrorsWith = function (newErrors) {

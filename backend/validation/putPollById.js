@@ -7,7 +7,7 @@ module.exports = function validatePutPollById(data) {
   data.answer = !isEmpty(data.answer) ? data.answer : "";
 
   if (Validator.isEmpty(data.answer)) {
-      errors.answer = "answer param is required";s
+      errors.answer = "answer param is required";
   }
 
   return {

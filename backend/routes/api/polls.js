@@ -99,17 +99,23 @@ router.put("/:pollId", (req, res) => {
             }
 
             var userId = authData.id
-
+            console.log("tuka sum beee")
             User.findOne({ _id: userId }).then(user => {
+                console.log("vutre sum beee")
                 var username = user.name
 
                 Poll.findOne({ _id: req.params.pollId }).lean().then(poll => {
+                    console.log("bash vutre sum beee")
+                    console.log(req)
+
                     poll.voters  = !isEmpty(poll.voters) ? poll.voters : [];
                     for (var index in poll.voters) {
                         if (poll.voters[index] == username){
                             return res.status(409).json({ error: "You already voted in this poll" });
                         }
                     }
+
+                    console.log("ne sum glasuval")
 
                     for (var index in poll.answers) {
                         if (poll.answers[index].name == req.body.answer){

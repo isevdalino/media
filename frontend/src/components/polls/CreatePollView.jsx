@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { articleViewContainerStyleSheet } from "../articles/articlesStyles";
+import { postPoll } from "../../server-requests/requests";
 
 function CreatePollView() {
 
@@ -41,22 +42,7 @@ function CreatePollView() {
         }
 
         console.log('Will post the poll here!');
-
-        // let poll = { title: title, options: options };
-        // $.ajax({
-        //     url: this.props.url,
-        //     dataType: 'jsonp',
-        //     type: 'POST',
-        //     data: poll,
-        //     success: function (data) {
-        //         console.log('request sent');
-        //         this.setState({ title: '' });
-        //         this.setState({ options: [{ text: '' }, { text: '' }] });
-        //     }.bind(this),
-        //     error: function (xhr, status, err) {
-        //         console.error(this.props.url, status, err.toString());
-        //     }.bind(this)
-        // });
+        postPoll(title,options)
     };
 
     const leftButtonStyle = {
@@ -93,7 +79,7 @@ function CreatePollView() {
                 <label >{"Adjust Number of Options"}</label><br />
                 <input type="button" className="btn btn-primary" style={leftButtonStyle} value="+" onClick={addInputs} />
                 <input type="button" className="btn btn-danger" style={leftButtonStyle} value="-" onClick={removeInputs} />
-                <input type="button" className="btn btn-success pull-right" style={rightButtonStyle} value="Create Poll" onClick={postPoll} />
+                <input type="submit" className="btn btn-success pull-right" name="postPoll" style={rightButtonStyle} value="Create Poll" noValidate onClick={postPoll} />
             </form>
         </div>
     );

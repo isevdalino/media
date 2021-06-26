@@ -11,7 +11,7 @@ function ShowAllArticlesView() {
     const buttonStyle = createArticleButtonStyleSheet();
     const addArticleIconStyle = createArticleIconStyleSheet();
 
-    const [articles, setArticles] = useState(MOCK_ARTICLES);
+    const [articles, setArticles] = useState([]);
 
     useEffect(() => {
         fetchArticles().then(newArticles => setArticles(newArticles));

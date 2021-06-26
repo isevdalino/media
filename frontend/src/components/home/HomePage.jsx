@@ -1,28 +1,27 @@
 import React, { useState, Component, useEffect } from "react";
 import ArticleList from '../articles/ArticleList';
-import MOCK_TOPICS from '../../mock-data/mock-topics';
 import MOCK_PHOTO_ARTICLES from '../../mock-data/mock-photo-articles';
-import MOCK_POLLS from '../../mock-data/mock-polls';
 import { Link, useHistory } from "react-router-dom";
 import { containerStyleSheet } from '../articles/articlesStyles.js'
 import TopicList from "../topics/TopicList";
 import PhotoArticleList from "../photo-articles/PhotoArticleList";
 import PollList from "../polls/PollList";
 import { ARTICLES, PHOTO_ARTICLES, POLLS, TOPICS } from "../../constants/Paths";
-import MOCK_ARTICLES from "../../mock-data/mock-articles";
-import { fetchArticles } from "../../server-requests/requests";
+import { fetchArticles,fetchTopics,fetchPolls } from "../../server-requests/requests";
 
 function HomePage() {
-    const [articles, setArticles] = useState(MOCK_ARTICLES);
+    const [articles, setArticles] = useState([]);
 
-    const [topics, setTopics] = useState(MOCK_TOPICS);
+    const [topics, setTopics] = useState([]);
 
     const [photoArticles, setPhotoArticles] = useState(MOCK_PHOTO_ARTICLES);
 
-    const [polls, setPolls] = useState(MOCK_POLLS);
+    const [polls, setPolls] = useState([]);
 
     useEffect(() => {
-        fetchArticles().then(newArticles => setArticles(newArticles));
+        fetchArticles(8).then(newArticles => setArticles(newArticles));
+        fetchTopics(4).then(newTopics => setTopics(newTopics));
+        fetchPolls(8).then(newPolls => setPolls(newPolls));
     }, []);
 
     const containerStyle = containerStyleSheet();
@@ -59,6 +58,7 @@ function HomePage() {
                 </button>
             </div>
             <div style={containerStyle}>
+                <h3 className="text-center">Articles</h3>
                 <ArticleList articles={articles} />
                 <Link to={ARTICLES}>
                     <button type="submit" className="btn btn-primary btn-block" style={buttonStyle}>
