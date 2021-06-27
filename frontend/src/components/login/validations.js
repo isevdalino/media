@@ -1,5 +1,3 @@
-import * as zxcvbn from 'zxcvbn';
-
 export function minMaxLength(text, minLength, maxLength) {
     let result = !text || text.length < minLength;
     if (maxLength)
@@ -13,26 +11,4 @@ export function validEmail(text) {
     );
 
     return regex.test(text);
-}
-
-let registeredUsers = [
-    'tstoyanova@abv.bg'
-];
-
-export function passwordStrength(text) {
-    let result = zxcvbn(text);
-    return result.score < 3;
-}
-
-export function userExists(email) {
-    return new Promise(resolve => {
-        setTimeout(() => {
-            if (registeredUsers.findIndex(u => u === email) !== -1) {
-                resolve(true);
-            }
-            else {
-                resolve(false);
-            }
-        });
-    });
 }

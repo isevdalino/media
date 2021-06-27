@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { SERVER_ADDRESS } from "../../constants/Paths";
 import { Article } from "../../models/article";
 
-function ArticleScreenView() {
+function ArticleScreenView({ isUserLoggedInState }) {
     let { id } = useParams();
     const [article, setArticle] = useState({});
 
@@ -28,8 +28,8 @@ function ArticleScreenView() {
 
     return (
         <div style={topMargin}>
-            <ArticleView article={article} />
-            <CommentSectionView comments={comment} article={article} />
+            <ArticleView article={article} isUserLoggedInState={isUserLoggedInState} />
+            <CommentSectionView articleId={id} />
         </div>
     );
 }

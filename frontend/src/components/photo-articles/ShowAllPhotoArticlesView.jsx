@@ -5,7 +5,7 @@ import { containerStyleSheet, createArticleButtonStyleSheet, createArticleIconSt
 import { Link } from "react-router-dom";
 import { CREATE_PHOTO_ARTICLE } from "../../constants/Paths";
 
-function ShowAllPhotoArticlesView() {
+function ShowAllPhotoArticlesView({ isUserLoggedInState }) {
 
     const [photoArticles, setPhotoArticles] = useState(MOCK_PHOTO_ARTICLES);
     const containerStyle = containerStyleSheet();
@@ -14,12 +14,14 @@ function ShowAllPhotoArticlesView() {
 
     return (
         <div>
-            <Link to={CREATE_PHOTO_ARTICLE}>
-                <button type="submit" className="btn btn-primary btn-block" style={buttonStyle}>
-                    New photo
+            {isUserLoggedInState &&
+                <Link to={CREATE_PHOTO_ARTICLE}>
+                    <button type="submit" className="btn btn-primary btn-block" style={buttonStyle}>
+                        New photo
                     <img style={addArticleIconStyle} src={'pencil_writing_icon.png'} />
-                </button>
-            </Link>
+                    </button>
+                </Link>
+            }
             <div style={containerStyle}>
                 <PhotoArticleList photoArticles={photoArticles} />
             </div>

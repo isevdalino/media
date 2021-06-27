@@ -42,3 +42,16 @@
     flex-basis: auto;
     justify-content: space-between;
 }
+
+.logout-button-style {
+  background: white;
+    border: none;
+}
+
+.visible {
+  visibility: visible;
+}
+
+.invisible {
+  visibility: invisible;
+}

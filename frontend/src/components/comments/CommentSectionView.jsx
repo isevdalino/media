@@ -1,8 +1,19 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { fetchComments } from "../../server-requests/requests";
 import { CommentList } from "./CommentList";
 import { CreateCommentView } from "./CreateCommentView";
 
-function CommentSectionView({ article, comments }) {
+function CommentSectionView({ articleId }) {
+    let [comments, setComments] = useState([]);
+    let [onCommentAdded, setOnCommentAdded] = useState("");
+
+    useEffect(() => {
+        fetchComments(articleId)
+            .then(data => {
+                setComments(data);
+            });
+    }, [onCommentAdded]);
+
     const containerStyle = {
         margin: "10% auto auto auto",
         width: "60%",
@@ -13,7 +24,7 @@ function CommentSectionView({ article, comments }) {
     return (
         <div style={containerStyle}>
             <h3>Comments:</h3>
-            <CreateCommentView />
+            <CreateCommentView articleId={articleId} setOnCommentAdded={setOnCommentAdded} />
             <CommentList comments={comments} />
         </div>
     );

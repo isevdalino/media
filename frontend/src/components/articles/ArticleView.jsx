@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import { articleViewContainerStyleSheet, authorStyleSheet, contentStyleSheet, titleStyleSheet, topicLinkStyleSheet } from "./articlesStyles";
 import ReactStars from "react-rating-stars-component";
 import { useParams } from "react-router";
-import { SEARCH, SERVER_ADDRESS } from "../../constants/Paths";
+import { SEARCH } from "../../constants/Paths";
+import { fetchRating, postRating } from "../../server-requests/requests";
 
-function ArticleView({ article }) {
+function ArticleView({ article, isUserLoggedInState }) {
   const articleViewContainerStyle = articleViewContainerStyleSheet();
   const titleStyle = titleStyleSheet();
   const authorStyle = authorStyleSheet();
@@ -14,31 +15,30 @@ function ArticleView({ article }) {
   let [rating, setRating] = useState(0);
   let { id } = useParams();
 
-  useEffect(() => {
-    const requestOptions = {
-      method: 'GET'
-    };
-
-    fetch(SERVER_ADDRESS + "ratings/" + id, requestOptions)
-      .then(response => response.json())
-      .then(data => setRating(data.rating));
-  }, [rating]);
-
   const validateNewRating = function (value) {
     return {
       size: 40,
       count: 10,
       isHalf: false,
-      edit: true,
+      edit: isUserLoggedInState ? true : false,
       value: value
     };
   };
 
   let [ratingView, setRatingView] = useState(validateNewRating(0));
 
+  useEffect(() => {
+    fetchRating(id)
+      .then(data => setRating(data.rating));
+  }, [ratingView]);
+
+
   const onChangeRating = function (newValue) {
-    setRatingView(validateNewRating(newValue));
-    console.log(`Rating: the new value is ${newValue}`);
+    postRating(id, newValue)
+      .then(data => {
+        setRatingView(validateNewRating(newValue))
+        console.log(`Rating: the new value is ${newValue}`);
+      });
   };
 
   const midRatingStyle = {

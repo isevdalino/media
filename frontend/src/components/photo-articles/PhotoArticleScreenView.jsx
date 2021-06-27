@@ -16,7 +16,7 @@ function PhotoArticleScreenView() {
     return (
         <div style={topMargin}>
             <PhotoArticleView photoArticle={photoArticle} />
-            <CommentSectionView comments={comments} article={photoArticle} />
+            <CommentSectionView aricleId={id} />
         </div>
     );
 }

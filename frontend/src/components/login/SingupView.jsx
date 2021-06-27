@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { minMaxLength, validEmail, passwordStrength, userExists, } from './validations';
+import { minMaxLength, validEmail } from './validations';
 import './loginStyles.css';
 import { SERVER_ADDRESS, SIGN_IN } from '../../constants/Paths';
 import { useHistory } from 'react-router';
@@ -86,9 +86,6 @@ function SignupView() {
             case 'password':
                 if (minMaxLength(value, 6)) {
                     currentFormErrors[name] = 'Password should have minimum 6 characters';
-                } else if (passwordStrength(value)) {
-                    currentFormErrors[name] =
-                        'Password is not strong enough. Include an upper case letter, a number or a special character to make it strong';
                 } else {
                     delete currentFormErrors[name];
                     setUser({

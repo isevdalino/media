@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { validEmail } from './validations';
 import './loginStyles.css';
-import { SERVER_ADDRESS ,HOME} from '../../constants/Paths';
+import { SERVER_ADDRESS, HOME } from '../../constants/Paths';
 import { useHistory } from 'react-router';
+import { USER_EMAIL_LOCAL_STORAGE_KEY, USER_LOGIN_TOKEN_LOCAL_STORAGE_KEY } from '../../constants/constants';
 
-function LoginView() {
+function LoginView({ setIsUserLoggedInState }) {
     const [user, setUser] = useState({});
     const [formErrors, setFormErrors] = useState({});
     const [errorUiList, setErrorUiList] = useState([]);
@@ -25,9 +26,9 @@ function LoginView() {
             .then(response => response.json())
             .then(data => {
                 console.log(data)
-                localStorage.setItem('loginToken', data.token)
-                localStorage.setItem('userEmail', user.email)
-
+                localStorage.setItem(USER_LOGIN_TOKEN_LOCAL_STORAGE_KEY, data.token)
+                localStorage.setItem(USER_EMAIL_LOCAL_STORAGE_KEY, user.email)
+                setIsUserLoggedInState(true);
                 history.push(HOME);
             })
     }

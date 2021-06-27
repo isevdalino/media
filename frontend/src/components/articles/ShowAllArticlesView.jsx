@@ -3,10 +3,9 @@ import ArticleList from './ArticleList';
 import { containerStyleSheet, createArticleButtonStyleSheet, createArticleIconStyleSheet } from './articlesStyles.js'
 import { Link } from "react-router-dom";
 import { CREATE_ARTICLE } from "../../constants/Paths";
-import MOCK_ARTICLES from "../../mock-data/mock-articles";
 import { fetchArticles } from "../../server-requests/requests";
 
-function ShowAllArticlesView() {
+function ShowAllArticlesView({ isUserLoggedInState }) {
     const containerStyle = containerStyleSheet();
     const buttonStyle = createArticleButtonStyleSheet();
     const addArticleIconStyle = createArticleIconStyleSheet();
@@ -19,12 +18,14 @@ function ShowAllArticlesView() {
 
     return (
         <div>
-            <Link to={CREATE_ARTICLE}>
-                <button type="submit" className="btn btn-primary btn-block" style={buttonStyle}>
-                    New article
+            {isUserLoggedInState &&
+                <Link to={CREATE_ARTICLE}>
+                    <button type="submit" className="btn btn-primary btn-block" style={buttonStyle}>
+                        New article
                     <img style={addArticleIconStyle} src={'pencil_writing_icon.png'} />
-                </button>
-            </Link>
+                    </button>
+                </Link>
+            }
             <div style={containerStyle}>
                 <ArticleList articles={articles} />
             </div>
