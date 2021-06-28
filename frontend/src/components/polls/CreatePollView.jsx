@@ -1,23 +1,27 @@
 import React, { useState } from "react";
 import { articleViewContainerStyleSheet } from "../articles/articlesStyles";
-import { postPoll } from "../../server-requests/requests";
+import { postPoll} from "../../server-requests/requests";
+import { useHistory } from 'react-router';
+import { onLogoutClick } from '../login/logoutHandler';
+import { SIGN_IN } from "../../constants/Paths";
 
-function CreatePollView() {
+function CreatePollView({setIsUserLoggedInState}) {
 
     const articleViewContainerStyle = articleViewContainerStyleSheet();
 
     const [options, setOptions] = useState([]);
     const [title, setTitle] = useState("");
+    const history = useHistory();
 
     const handleOptionInput = function (i, e) {
         let newOptions = JSON.parse(JSON.stringify(options));
-        newOptions[i].text = e.target.value
+        newOptions[i] = e.target.value
         setOptions(newOptions);
     };
 
     const addInputs = function () {
         let newOptions = JSON.parse(JSON.stringify(options));
-        newOptions.push({ text: '' });
+        newOptions.push("");
         setOptions(newOptions);
     };
 
@@ -27,22 +31,25 @@ function CreatePollView() {
         setOptions(newOptions);
     };
 
-    const postPoll = function (e) {
+    const handleSubmit = (e) => {
         e.preventDefault();
-        let titleJson = JSON.parse(JSON.stringify(title));
-        let optionsJson = JSON.parse(JSON.stringify(options));
         let validOptions = 0;
         for (let i = 0; i < options.length; i++) {
-            if (options[i].text) { validOptions++; }
+            if (options[i]) { validOptions++; }
         }
 
-        if (!titleJson || validOptions < 2) {
+        if (!title || validOptions < 2) {
             console.log('Each poll must have a title and a minimum of 2 options!');
             return;
         }
 
-        console.log('Will post the poll here!');
-        postPoll(title,options)
+        postPoll(title,options).then(data => {
+            if(data.status == 403){
+                onLogoutClick(history,SIGN_IN, setIsUserLoggedInState) 
+            }else{
+                history.push("/polls/"+data.json()._id);
+            }
+        })
     };
 
     const leftButtonStyle = {
@@ -72,14 +79,14 @@ function CreatePollView() {
     return (
         <div style={articleViewContainerStyle}>
             <h3 className="text-center">Create your New Poll</h3>
-            <form>
+            <form noValidate onSubmit={handleSubmit}>
                 <label htmlFor="title">Title</label>
                 <input type="text" className="form-control input-lg" value={title} placeholder="Title" onChange={e => setTitle(e.target.value)} />
                 {inputNodes}
                 <label >{"Adjust Number of Options"}</label><br />
                 <input type="button" className="btn btn-primary" style={leftButtonStyle} value="+" onClick={addInputs} />
                 <input type="button" className="btn btn-danger" style={leftButtonStyle} value="-" onClick={removeInputs} />
-                <input type="submit" className="btn btn-success pull-right" name="postPoll" style={rightButtonStyle} value="Create Poll" noValidate onClick={postPoll} />
+                <input type="submit" className="btn btn-success pull-right" style={rightButtonStyle} value="Create Poll"/>
             </form>
         </div>
     );

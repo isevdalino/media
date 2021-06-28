@@ -3,13 +3,18 @@ import React, { useState,useEffect } from "react";
 import { articleViewContainerStyleSheet } from "../articles/articlesStyles";
 import "./pollStyles.css";
 import { fetchPoll, putPoll } from "../../server-requests/requests";
+import { useHistory } from 'react-router';
+import { SIGN_IN } from "../../constants/Paths";
+import { onLogoutClick } from '../login/logoutHandler';
 
-function PollView() {
+function PollView({setIsUserLoggedInState}) {
     let { id } = useParams();
     const [poll, setPoll] = useState([]);
     const [voted, setVoted] = useState(false);
     const [totalVotes, setTotalVotes] = useState(0);
     const [pollOptions, setPollOptions] = useState([]);
+    const history = useHistory();
+    const [errorMessage, setErrorMessage] = useState('');
 
     useEffect(() => {
         fetchPoll(id).then(poll => {
@@ -18,7 +23,7 @@ function PollView() {
             setVoted(hasUserVoted(poll))
             setPollOptions(getPollOptions(poll))
         });
-    }, []);
+    }, [voted]);
 
     function getSumOfTotalVotes(poll){
         return poll.answers
@@ -48,11 +53,17 @@ function PollView() {
                 }
             }
 
-            // const voteCurrent = poll.answers[voteSelected].votes;
-            // poll.answers[voteSelected].votes = voteCurrent + 1;
-            // setTotalVotes(totalVotes + 1);
-            // setVoted(true);
-            putPoll(poll.id,answer)
+            setVoted(true);
+            putPoll(poll.id,answer,history).then(data => {
+                if (data.status==409){
+                    setErrorMessage('You already voted in this poll');
+                }
+                else if(data.status == 403){
+                    onLogoutClick(history,SIGN_IN, setIsUserLoggedInState) 
+                } else{
+                        history.push("/polls/"+id);
+                    }
+                })
         }
     };
 
@@ -79,6 +90,9 @@ function PollView() {
                     {pollOptions}
                 </ul>
                 <p>Total Votes: {totalVotes}</p>
+                {errorMessage && (
+                <p className="error"> {errorMessage} </p>
+                )}
             </div>
         </div>
     );

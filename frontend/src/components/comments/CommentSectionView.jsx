@@ -3,7 +3,7 @@ import { fetchComments } from "../../server-requests/requests";
 import { CommentList } from "./CommentList";
 import { CreateCommentView } from "./CreateCommentView";
 
-function CommentSectionView({ articleId }) {
+function CommentSectionView({ articleId,setIsUserLoggedInState }) {
     let [comments, setComments] = useState([]);
     let [onCommentAdded, setOnCommentAdded] = useState("");
 
@@ -24,7 +24,7 @@ function CommentSectionView({ articleId }) {
     return (
         <div style={containerStyle}>
             <h3>Comments:</h3>
-            <CreateCommentView articleId={articleId} setOnCommentAdded={setOnCommentAdded} />
+            <CreateCommentView articleId={articleId} setOnCommentAdded={setOnCommentAdded} setIsUserLoggedInState={setIsUserLoggedInState} />
             <CommentList comments={comments} />
         </div>
     );

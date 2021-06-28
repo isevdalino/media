@@ -1,12 +1,12 @@
 import { USER_EMAIL_LOCAL_STORAGE_KEY, USER_LOGIN_TOKEN_LOCAL_STORAGE_KEY } from "../../constants/constants";
 import { HOME } from "../../constants/Paths";
 
-function onLogoutClick(history, setIsUserLoggedInState) {
+function onLogoutClick(history,page, setIsUserLoggedInState) {
     console.log("Logout ...");
     localStorage.removeItem(USER_LOGIN_TOKEN_LOCAL_STORAGE_KEY);
     localStorage.removeItem(USER_EMAIL_LOCAL_STORAGE_KEY);
     setIsUserLoggedInState(false);
-    history.push(HOME);
+    history.push(page);
 };
 
 function isUserLoggedIn() {

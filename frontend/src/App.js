@@ -43,9 +43,11 @@ function App() {
             <ShowAllArticlesView isUserLoggedInState={isUserLoggedInState} />
           </Route>
           <Route path="/articles/:id" >
-            <ArticleScreenView isUserLoggedInState={isUserLoggedInState} />
+            <ArticleScreenView isUserLoggedInState={isUserLoggedInState} setIsUserLoggedInState={setIsUserLoggedInState}/>
           </Route>
-          <Route path={CREATE_ARTICLE} component={CreateArticleView} />
+          <Route path={CREATE_ARTICLE} >
+            <CreateArticleView setIsUserLoggedInState={setIsUserLoggedInState} />
+          </Route>
           <Route exact path={PHOTO_ARTICLES}>
             <ShowAllPhotoArticlesView isUserLoggedInState={isUserLoggedInState} />
           </Route>
@@ -54,8 +56,12 @@ function App() {
           <Route exact path={POLLS}>
             <ShowAllPollsView isUserLoggedInState={isUserLoggedInState} />
           </Route>
-          <Route path="/polls/:id" component={PollView} />
-          <Route path={CREATE_POLL} component={CreatePollView} />
+          <Route path="/polls/:id" >
+            <PollView setIsUserLoggedInState={setIsUserLoggedInState} />
+          </Route>
+          <Route path={CREATE_POLL} component={CreatePollView}>
+            <CreatePollView setIsUserLoggedInState={setIsUserLoggedInState}/>
+          </Route>
           <Route path={TOPICS} component={ShowAllTopicsView} />
           <Route path={SEARCH} component={SearchResults} />
           <Route path={CREATE_EVENT} component={GoogleMap} />

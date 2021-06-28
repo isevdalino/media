@@ -1,9 +1,11 @@
 import React,{ useState } from "react";
 import { articleViewContainerStyleSheet } from "./articlesStyles";
-import { SERVER_ADDRESS } from '../../constants/Paths';
 import { useHistory } from 'react-router';
+import { postArticle } from "../../server-requests/requests";
+import { SIGN_IN } from "../../constants/Paths";
+import { onLogoutClick } from '../login/logoutHandler';
 
-function CreateArticleView() {
+function CreateArticleView({setIsUserLoggedInState}) {
     const articleViewContainerStyle = articleViewContainerStyleSheet();
     const inputStyle = {
         display: "flex",
@@ -22,20 +24,13 @@ function CreateArticleView() {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        const body = JSON.stringify({ name: register.title, topic: register.topic, content: register.content});
-        console.log(body);
-
-        const requestOptions = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json','Authorization': localStorage.getItem('loginToken')},
-            body: body
-        };
-        fetch(SERVER_ADDRESS + "articles", requestOptions)
-            .then(response => response.json())
-            .then(data => {
-                console.log(data)
-                history.push("/articles/"+data._id);
-            })
+        postArticle(register.title,register.topic,register.content).then(data => {
+            if(data.status == 403){
+                onLogoutClick(history,SIGN_IN, setIsUserLoggedInState) 
+            }else{
+                history.push("/articles/"+data.json()._id);
+            }
+        })
     }
     const changeErrorsWith = function (newErrors) {
         setFormErrors(newErrors);

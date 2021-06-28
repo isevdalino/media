@@ -66,7 +66,7 @@ router.post("/login", (req, res) => {
           payload,
           "secret",
           {
-            expiresIn: 600
+            expiresIn: 10
           },
           (err, token) => {
             res.json({

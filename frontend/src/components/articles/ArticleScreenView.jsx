@@ -1,12 +1,11 @@
 import { useParams } from "react-router";
-import MOCK_COMMENTS from "../../mock-data/mock-comment";
 import { ArticleView } from "./ArticleView";
 import { CommentSectionView } from "../comments/CommentSectionView"
 import { useEffect, useState } from "react";
 import { SERVER_ADDRESS } from "../../constants/Paths";
 import { Article } from "../../models/article";
 
-function ArticleScreenView({ isUserLoggedInState }) {
+function ArticleScreenView({ isUserLoggedInState,setIsUserLoggedInState }) {
     let { id } = useParams();
     const [article, setArticle] = useState({});
 
@@ -24,12 +23,10 @@ function ArticleScreenView({ isUserLoggedInState }) {
             .then(data => setArticle(new Article(data._id, data.name, data.authorName, data.content, data.topic)));
     }, []);
 
-    let comment = MOCK_COMMENTS;
-
     return (
         <div style={topMargin}>
-            <ArticleView article={article} isUserLoggedInState={isUserLoggedInState} />
-            <CommentSectionView articleId={id} />
+            <ArticleView article={article} isUserLoggedInState={isUserLoggedInState} setIsUserLoggedInState={setIsUserLoggedInState}/>
+            <CommentSectionView articleId={id} setIsUserLoggedInState={setIsUserLoggedInState}/>
         </div>
     );
 }

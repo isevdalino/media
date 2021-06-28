@@ -18,6 +18,19 @@ function fetchArticles(limit) {
         );
 };
 
+function postArticle(name,topic,content){
+    const body = JSON.stringify({ name: name, topic: topic, content: content});
+
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json','Authorization': localStorage.getItem(USER_LOGIN_TOKEN_LOCAL_STORAGE_KEY)},
+        body: body
+    };
+
+    return fetch(SERVER_ADDRESS + "articles", requestOptions)
+}
+
+
 function fetchTopics(limit) {
     const requestOptions = {
         method: 'GET',
@@ -71,15 +84,10 @@ function putPoll(id, answer) {
     };
 
     return fetch(SERVER_ADDRESS + "polls/" + id, requestOptions)
-        .then(response => response.json())
-        .then(data =>
-            data
-        );
 }
 
 function postPoll(name, answers) {
     const body = JSON.stringify({ name: name, answers: answers });
-
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': localStorage.getItem(USER_LOGIN_TOKEN_LOCAL_STORAGE_KEY) },
@@ -87,10 +95,6 @@ function postPoll(name, answers) {
     };
 
     return fetch(SERVER_ADDRESS + "polls", requestOptions)
-        .then(response => response.json())
-        .then(data =>
-            data
-        );
 }
 
 function fetchRating(articleId) {
@@ -112,10 +116,6 @@ function postRating(articleId, newRating) {
     };
 
     return fetch(SERVER_ADDRESS + "ratings/" + articleId, requestOptions)
-        .then(response => response.json())
-        .then(data =>
-            data
-        );
 }
 
 function fetchComments(articleId) {
@@ -138,14 +138,9 @@ function postComment(articleId, comment) {
     };
 
     return fetch(SERVER_ADDRESS + "comments/" + articleId, requestOptions)
-        .then(response => response.json())
-        .then(data => {
-            console.log(data);
-            return data;
-        })
 }
 
 export {
     fetchArticles, fetchTopics, fetchPolls, fetchPoll, putPoll, postPoll, postRating, fetchRating,
-    fetchComments, postComment
+    fetchComments, postComment,postArticle
 };

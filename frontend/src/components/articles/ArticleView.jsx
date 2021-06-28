@@ -4,8 +4,11 @@ import ReactStars from "react-rating-stars-component";
 import { useParams } from "react-router";
 import { SEARCH } from "../../constants/Paths";
 import { fetchRating, postRating } from "../../server-requests/requests";
+import { onLogoutClick } from '../login/logoutHandler';
+import { useHistory } from 'react-router';
+import { SIGN_IN } from "../../constants/Paths";
 
-function ArticleView({ article, isUserLoggedInState }) {
+function ArticleView({ article, isUserLoggedInState,setIsUserLoggedInState }) {
   const articleViewContainerStyle = articleViewContainerStyleSheet();
   const titleStyle = titleStyleSheet();
   const authorStyle = authorStyleSheet();
@@ -14,6 +17,7 @@ function ArticleView({ article, isUserLoggedInState }) {
 
   let [rating, setRating] = useState(0);
   let { id } = useParams();
+  const history = useHistory();
 
   const validateNewRating = function (value) {
     return {
@@ -36,8 +40,11 @@ function ArticleView({ article, isUserLoggedInState }) {
   const onChangeRating = function (newValue) {
     postRating(id, newValue)
       .then(data => {
+        if(data.status == 403){
+          onLogoutClick(history,SIGN_IN, setIsUserLoggedInState) 
+      }else{
         setRatingView(validateNewRating(newValue))
-        console.log(`Rating: the new value is ${newValue}`);
+      }
       });
   };
 

@@ -1,17 +1,25 @@
 import React, { useState } from "react";
 import { postComment } from "../../server-requests/requests";
 import { commentItemStyleSheet } from "./commentStyles";
+import { onLogoutClick } from '../login/logoutHandler';
+import { useHistory } from 'react-router';
+import { SIGN_IN } from "../../constants/Paths";
 
-function CreateCommentView({ articleId, setOnCommentAdded }) {
+function CreateCommentView({ articleId, setOnCommentAdded,setIsUserLoggedInState }) {
     const commentItemStyle = commentItemStyleSheet();
     const [commentData, setCommentData] = useState({});
+    const history = useHistory();
 
     const handleSubmit = (e) => {
         e.preventDefault();
         postComment(articleId, commentData.newComment)
             .then(data => {
-                setOnCommentAdded(data);
-                return data;
+                if(data.status == 403){
+                    onLogoutClick(history,SIGN_IN, setIsUserLoggedInState) 
+                }else{
+                    setOnCommentAdded(data);
+                    return data;
+                }
             })
     };
 
