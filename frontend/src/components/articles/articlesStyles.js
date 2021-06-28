@@ -7,6 +7,17 @@ function containerStyleSheet() {
     };
 };
 
+function scrollableContainerStyleSheet() {
+    return {
+        height: "500px",
+        overflow: "auto",
+        margin: "5% 20%",
+        padding: "3rem",
+        textAlign: "center",
+        backgroundImage: "url('grey.png')"
+    };
+};
+
 function cardStyleSheet() {
     return {
         backgroundColor: "white",
@@ -100,7 +111,7 @@ function topicLinkStyleSheet() {
 }
 
 export {
-    containerStyleSheet, cardStyleSheet, cardPhotoStyleSheet, photoStyleSheet, cardContainerStyleSheet,
+    containerStyleSheet, scrollableContainerStyleSheet, cardStyleSheet, cardPhotoStyleSheet, photoStyleSheet, cardContainerStyleSheet,
     articleViewContainerStyleSheet, titleStyleSheet, authorStyleSheet, contentStyleSheet, createArticleButtonStyleSheet,
     createArticleIconStyleSheet, topicLinkStyleSheet
 };

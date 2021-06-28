@@ -13,14 +13,20 @@ function CommentList({ comments }) {
         textAlign: "left",
     };
 
+    const isArrayEmpty = comments === undefined || comments.length == 0;
+
     return (
         <div style={containerStyle}>
-            {comments.map(comment => (
-                <div style={commentItemStyle} key={comment.id}>
-                    <div style={textAlignLeftStyle}>{comment.username}:</div>
-                    <h4 style={textAlignLeftStyle}>{comment.comment}</h4>
-                </div>
-            ))}
+            {isArrayEmpty ?
+                <h4>There aren't any comments yet.</h4>
+                :
+                comments.map(comment => (
+                    <div style={commentItemStyle} key={comment.id}>
+                        <div style={textAlignLeftStyle}>{comment.username}:</div>
+                        <h4 style={textAlignLeftStyle}>{comment.comment}</h4>
+                    </div>
+                ))
+            }
         </div>
     );
 };

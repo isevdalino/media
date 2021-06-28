@@ -1,37 +1,59 @@
-import React, { useState, useEffect } from "react";
-import ArticleList from './ArticleList';
-import { containerStyleSheet, createArticleButtonStyleSheet, createArticleIconStyleSheet } from './articlesStyles.js'
+import React, { useEffect, useState } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
 import { Link } from "react-router-dom";
+import { hasMoreElementsInList } from "../../constants/common";
+import { ITEMS_COUNT } from "../../constants/constants";
 import { CREATE_ARTICLE } from "../../constants/Paths";
 import { fetchArticles } from "../../server-requests/requests";
+import ArticleList from './ArticleList';
+import { createArticleButtonStyleSheet, createArticleIconStyleSheet, scrollableContainerStyleSheet } from './articlesStyles.js';
 
 function ShowAllArticlesView({ isUserLoggedInState }) {
-    const containerStyle = containerStyleSheet();
+    const containerStyle = scrollableContainerStyleSheet();
     const buttonStyle = createArticleButtonStyleSheet();
     const addArticleIconStyle = createArticleIconStyleSheet();
 
     const [articles, setArticles] = useState([]);
+    const [hasMoreElements, setHasMoreElements] = useState(true);
 
-    useEffect(() => {
-        fetchArticles().then(newArticles => setArticles(newArticles));
-    }, []);
+    const fetchArticlesFunction = () => {
+        fetchArticles(articles.length + ITEMS_COUNT)
+            .then(newArticles => {
+                if (hasMoreElementsInList(articles, newArticles, ITEMS_COUNT)) {
+                    setHasMoreElements(false);
+                }
+                setArticles(newArticles);
+            });
+    };
+
+    useEffect(() => fetchArticlesFunction(), []);
 
     return (
-        <div>
+        <div style={{ marginTop: "60px" }}>
             {isUserLoggedInState &&
                 <Link to={CREATE_ARTICLE}>
                     <button type="submit" className="btn btn-primary btn-block" style={buttonStyle}>
                         New article
-                    <img style={addArticleIconStyle} src={'pencil_writing_icon.png'} />
+                        <img style={addArticleIconStyle} src={'pencil_writing_icon.png'} />
                     </button>
                 </Link>
             }
-            <div style={containerStyle}>
-                <ArticleList articles={articles} />
+            <div id="scrollableDiv" style={containerStyle}>
+                <InfiniteScroll
+                    dataLength={articles.length}
+                    next={fetchArticlesFunction}
+                    hasMore={hasMoreElements}
+                    loader={<h4>Loading...</h4>}
+                    scrollableTarget="scrollableDiv"
+                >
+                    <div >
+                        <ArticleList articles={articles} />
+                    </div>
+                </InfiniteScroll>
             </div>
         </div>
-
     );
 }
 
 export { ShowAllArticlesView };
+

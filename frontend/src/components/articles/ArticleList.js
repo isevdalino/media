@@ -18,14 +18,20 @@ const ArticleList = ({ articles }) => {
     const history = useHistory();
     const handleClick = id => { history.push('/articles/' + id) };
 
+    const isArrayEmpty = articles === undefined || articles.length == 0;
+
     return (
         <div style={containerStyle}>
-            {articles.map(article => (
-                <div style={cardStyle} key={article.id} onClick={(e) => handleClick(article.id, e)} >
-                    <h4>{article.title}</h4>
-                    <p style={cutText}>{article.content}</p>
-                </div>
-            ))}
+            {isArrayEmpty ?
+                <h4>There aren't any articles yet.</h4>
+                :
+                articles.map(article => (
+                    <div style={cardStyle} key={article.id} onClick={(e) => handleClick(article.id, e)} >
+                        <h4>{article.title}</h4>
+                        <p style={cutText}>{article.content}</p>
+                    </div>
+                ))
+            }
         </div>
     )
 }

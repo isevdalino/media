@@ -25,7 +25,10 @@ function ToolbarComponent({ isUserLoggedInState, setIsUserLoggedInState }) {
                             <Link className="nav-link" style={loginVisibilityStyleSheet(isUserLoggedInState)} to={SIGN_UP}>Sign up</Link>
                         </li>
                         <li className="nav-item">
-                            <button className="nav-link logout-button-style" style={logoutVisibilityStyleSheet(isUserLoggedInState)} onClick={() => { onLogoutClick(history,HOME, setIsUserLoggedInState) }}>Logout</button>
+                            <button className="nav-link logout-button-style" style={logoutVisibilityStyleSheet(isUserLoggedInState)}
+                                onClick={() => { onLogoutClick(history, HOME, setIsUserLoggedInState) }}>
+                                Logout
+                            </button>
                         </li>
                     </ul>
                     <ul className="navbar-nav ml-auto">
