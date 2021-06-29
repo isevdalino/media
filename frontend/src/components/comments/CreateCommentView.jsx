@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import { postComment } from "../../server-requests/requests";
-import { commentItemStyleSheet } from "./commentStyles";
 import { onLogoutClick } from '../login/logoutHandler';
 import { useHistory } from 'react-router';
 import { SIGN_IN } from "../../constants/Paths";
+import { commentItemStyle } from "./commentStyles";
 
 function CreateCommentView({ articleId, setOnCommentAdded,setIsUserLoggedInState }) {
-    const commentItemStyle = commentItemStyleSheet();
     const [commentData, setCommentData] = useState({});
     const history = useHistory();
 

@@ -3,6 +3,8 @@ import { Article } from "../models/article";
 import { Topic } from "../models/topic";
 import { Poll } from "../models/poll";
 import { USER_LOGIN_TOKEN_LOCAL_STORAGE_KEY } from "../constants/constants";
+import { Comment } from "../models/comment";
+import { Event } from "../models/event";
 
 function fetchArticles(limit) {
     const requestOptions = {
@@ -18,18 +20,29 @@ function fetchArticles(limit) {
         );
 };
 
-function postArticle(name,topic,content){
-    const body = JSON.stringify({ name: name, topic: topic, content: content});
+function postArticle(name, topic, content) {
+    const body = JSON.stringify({ name: name, topic: topic, content: content });
 
     const requestOptions = {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json','Authorization': localStorage.getItem(USER_LOGIN_TOKEN_LOCAL_STORAGE_KEY)},
+        headers: { 'Content-Type': 'application/json', 'Authorization': localStorage.getItem(USER_LOGIN_TOKEN_LOCAL_STORAGE_KEY) },
         body: body
     };
 
-    return fetch(SERVER_ADDRESS + "articles", requestOptions)
-}
+    return fetch(SERVER_ADDRESS + "articles", requestOptions);
+};
 
+function postEvent(eventName, eventDescription) {
+    const body = JSON.stringify({ name: eventName, description: eventDescription });
+
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': localStorage.getItem(USER_LOGIN_TOKEN_LOCAL_STORAGE_KEY) },
+        body: body
+    };
+
+    return fetch(SERVER_ADDRESS + "events", requestOptions);
+};
 
 function fetchTopics(limit) {
     const requestOptions = {
@@ -56,7 +69,22 @@ function fetchPolls(limit) {
         .then(response => response.json())
         .then(data =>
             data.map(poll =>
-                new Poll(poll._id, poll.name, poll.authorNames, poll.answers)
+                new Poll(poll._id, poll.name, poll.authorName, poll.answers)
+            )
+        );
+}
+
+function fetchEvents(limit) {
+    const requestOptions = {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+    };
+
+    return fetch(SERVER_ADDRESS + "events?limit=" + limit, requestOptions)
+        .then(response => response.json())
+        .then(data =>
+            data.map(event =>
+                new Event(event._id, event.name, event.authorName, event.description, event.createdAt)
             )
         );
 }
@@ -70,7 +98,20 @@ function fetchPoll(id) {
     return fetch(SERVER_ADDRESS + "polls/" + id, requestOptions)
         .then(response => response.json())
         .then(data =>
-            new Poll(data._id, data.name, data.authorName, data.answers, data.voters)
+            new Poll(data._id, data.name, data.authorName, data.answers, data.voters, data.createdAt)
+        );
+}
+
+function fetchEvent(id) {
+    const requestOptions = {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+    };
+
+    return fetch(SERVER_ADDRESS + "events/" + id, requestOptions)
+        .then(response => response.json())
+        .then(data =>
+            new Event(data._id, data.name, data.authorName, data.description, data.createdAt)
         );
 }
 
@@ -118,13 +159,18 @@ function postRating(articleId, newRating) {
     return fetch(SERVER_ADDRESS + "ratings/" + articleId, requestOptions)
 }
 
-function fetchComments(articleId) {
+function fetchComments(articleId, limit) {
     const requestOptions = {
         method: 'GET'
     };
 
-    return fetch(SERVER_ADDRESS + "comments/" + articleId, requestOptions)
-        .then(response => response.json());
+    return fetch(SERVER_ADDRESS + "comments/" + articleId + "?limit=" + limit, requestOptions)
+        .then(response => response.json())
+        .then(data =>
+            data.map(comment =>
+                new Comment(comment._id, comment.username, comment.comment, comment.createdAt)
+            )
+        );
 }
 
 function postComment(articleId, comment) {
@@ -142,5 +188,5 @@ function postComment(articleId, comment) {
 
 export {
     fetchArticles, fetchTopics, fetchPolls, fetchPoll, putPoll, postPoll, postRating, fetchRating,
-    fetchComments, postComment,postArticle
+    fetchComments, postComment, postArticle, postEvent, fetchEvents, fetchEvent
 };

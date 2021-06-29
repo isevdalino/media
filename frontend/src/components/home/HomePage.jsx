@@ -6,8 +6,10 @@ import { containerStyleSheet } from '../articles/articlesStyles.js'
 import TopicList from "../topics/TopicList";
 import PhotoArticleList from "../photo-articles/PhotoArticleList";
 import PollList from "../polls/PollList";
-import { ARTICLES, PHOTO_ARTICLES, POLLS, TOPICS } from "../../constants/Paths";
-import { fetchArticles,fetchTopics,fetchPolls } from "../../server-requests/requests";
+import { ARTICLES, EVENTS, PHOTO_ARTICLES, POLLS, TOPICS } from "../../constants/Paths";
+import { fetchArticles, fetchTopics, fetchPolls, fetchEvents } from "../../server-requests/requests";
+import EventList from "../events/EventList";
+import './homeStyles.css';
 
 function HomePage() {
     const [articles, setArticles] = useState([]);
@@ -18,10 +20,13 @@ function HomePage() {
 
     const [polls, setPolls] = useState([]);
 
+    const [events, setEvents] = useState([]);
+
     useEffect(() => {
         fetchArticles(8).then(newArticles => setArticles(newArticles));
         fetchTopics(4).then(newTopics => setTopics(newTopics));
         fetchPolls(8).then(newPolls => setPolls(newPolls));
+        fetchEvents(8).then(newEvents => setEvents(newEvents));
     }, []);
 
     const containerStyle = containerStyleSheet();
@@ -83,6 +88,18 @@ function HomePage() {
                         See all...
                     </button>
                 </Link>
+            </div>
+            <div style={containerStyle}>
+                <h3 className="text-center">Events</h3>
+                <EventList events={events} />
+                <Link to={EVENTS}>
+                    <button type="submit" className="btn btn-primary btn-block" style={buttonStyle}>
+                        See all...
+                    </button>
+                </Link>
+            </div>
+            <div className="footer">
+                <p>© 2021 Media, Inc</p>
             </div>
         </div>
     );

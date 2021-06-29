@@ -3,17 +3,15 @@ import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import './components/login/loginStyles.css';
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-
 import { HomePage } from "./components/home/HomePage";
 import { ShowAllArticlesView } from "./components/articles/ShowAllArticlesView";
 import { ShowAllPhotoArticlesView } from "./components/photo-articles/ShowAllPhotoArticlesView";
 import { CreateArticleView } from "./components/articles/CreateArticleView";
 import { CreatePhotoArticleView } from "./components/photo-articles/CreatePhotoArticleView";
-import { SIGN_IN, SIGN_UP, HOME, ARTICLES, PHOTO_ARTICLES, CREATE_ARTICLE, CREATE_POLL, POLLS, CREATE_PHOTO_ARTICLE, CREATE_EVENT, SEARCH, TOPICS } from "./constants/Paths";
+import { SIGN_IN, SIGN_UP, HOME, ARTICLES, PHOTO_ARTICLES, CREATE_ARTICLE, CREATE_POLL, POLLS, CREATE_PHOTO_ARTICLE, CREATE_EVENT, SEARCH, TOPICS, EVENTS } from "./constants/Paths";
 import { CreatePollView } from "./components/polls/CreatePollView";
 import { ShowAllPollsView } from "./components/polls/ShowAllPollsView";
 import { PollView } from "./components/polls/PollView";
-import { GoogleMap } from './components/events/GoogleMap';
 import { ArticleScreenView } from './components/articles/ArticleScreenView';
 import { PhotoArticleScreenView } from './components/photo-articles/PhotoArticleScreenView';
 import { SignupView } from './components/login/SingupView';
@@ -22,6 +20,9 @@ import { SearchResults } from './components/search/SearchResults';
 import { ShowAllTopicsView } from './components/topics/ShowAllTopicsView';
 import { ToolbarComponent } from './components/toolbar/ToolbarComponent';
 import { isUserLoggedIn } from './components/login/logoutHandler';
+import { ShowAllEventsView } from './components/events/ShowAllEventsView';
+import { EventView } from './components/events/EventView';
+import { CreateEventView } from './components/events/CreateEventView';
 
 function App() {
   let [isUserLoggedInState, setIsUserLoggedInState] = useState(isUserLoggedIn());
@@ -43,7 +44,7 @@ function App() {
             <ShowAllArticlesView isUserLoggedInState={isUserLoggedInState} />
           </Route>
           <Route path="/articles/:id" >
-            <ArticleScreenView isUserLoggedInState={isUserLoggedInState} setIsUserLoggedInState={setIsUserLoggedInState}/>
+            <ArticleScreenView isUserLoggedInState={isUserLoggedInState} setIsUserLoggedInState={setIsUserLoggedInState} />
           </Route>
           <Route path={CREATE_ARTICLE} >
             <CreateArticleView setIsUserLoggedInState={setIsUserLoggedInState} />
@@ -60,11 +61,17 @@ function App() {
             <PollView setIsUserLoggedInState={setIsUserLoggedInState} />
           </Route>
           <Route path={CREATE_POLL} component={CreatePollView}>
-            <CreatePollView setIsUserLoggedInState={setIsUserLoggedInState}/>
+            <CreatePollView setIsUserLoggedInState={setIsUserLoggedInState} />
           </Route>
           <Route path={TOPICS} component={ShowAllTopicsView} />
           <Route path={SEARCH} component={SearchResults} />
-          <Route path={CREATE_EVENT} component={GoogleMap} />
+          <Route exact path={EVENTS} >
+            <ShowAllEventsView isUserLoggedInState={isUserLoggedInState} />
+          </Route>
+          <Route path="/events/:id" component={EventView} />
+          <Route path={CREATE_EVENT}>
+            <CreateEventView setIsUserLoggedInState={setIsUserLoggedInState} />
+          </Route>
         </Switch>
       </div>
     </Router>

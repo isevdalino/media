@@ -11,3 +11,4 @@ export const POLLS = "/polls";
 export const CREATE_EVENT = "/create-event";
 export const SEARCH = "/search";
 export const TOPICS = "/topics";
+export const EVENTS = "/events";

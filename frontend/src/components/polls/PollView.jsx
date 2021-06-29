@@ -1,13 +1,14 @@
-import { useParams } from "react-router-dom";
-import React, { useState,useEffect } from "react";
-import { articleViewContainerStyleSheet } from "../articles/articlesStyles";
-import "./pollStyles.css";
-import { fetchPoll, putPoll } from "../../server-requests/requests";
+import React, { useEffect, useState } from "react";
 import { useHistory } from 'react-router';
+import { useParams } from "react-router-dom";
+import { getReadableDateTime } from "../../constants/common";
 import { SIGN_IN } from "../../constants/Paths";
+import { fetchPoll, putPoll } from "../../server-requests/requests";
+import { articleViewContainerStyleSheet } from "../articles/articlesStyles";
 import { onLogoutClick } from '../login/logoutHandler';
+import "./pollStyles.css";
 
-function PollView({setIsUserLoggedInState}) {
+function PollView({ setIsUserLoggedInState }) {
     let { id } = useParams();
     const [poll, setPoll] = useState([]);
     const [voted, setVoted] = useState(false);
@@ -25,63 +26,62 @@ function PollView({setIsUserLoggedInState}) {
         });
     }, [voted]);
 
-    function getSumOfTotalVotes(poll){
+    function getSumOfTotalVotes(poll) {
         return poll.answers
-        .map(answer => answer.votes)
-        .reduce((accumulator, currentValue) => accumulator + parseInt(currentValue));
+            .map(answer => answer.votes)
+            .reduce((accumulator, currentValue) => accumulator + parseInt(currentValue));
     }
 
-    function hasUserVoted(poll){
+    function hasUserVoted(poll) {
         const hasUserVoted = false;
         for (var index in poll.voters) {
-            if (poll.voters[index] ==  localStorage.getItem('userEmail')){
-                hasUserVoted=true;
+            if (poll.voters[index] == localStorage.getItem('userEmail')) {
+                hasUserVoted = true;
                 break;
             }
         }
         return hasUserVoted
     }
-    
-    function submitVote (event,poll) {
+
+    function submitVote(event, poll) {
         if (voted === false) {
             const voteSelected = event.target.dataset.id;
             var answer
             for (var index in poll.answers) {
-                if (poll.answers[index]._id == voteSelected ){
+                if (poll.answers[index]._id == voteSelected) {
                     answer = poll.answers[index].name;
                     break;
                 }
             }
 
             setVoted(true);
-            putPoll(poll.id,answer,history).then(data => {
-                if (data.status==409){
+            putPoll(poll.id, answer, history).then(data => {
+                if (data.status == 409) {
                     setErrorMessage('You already voted in this poll');
                 }
-                else if(data.status == 403){
-                    onLogoutClick(history,SIGN_IN, setIsUserLoggedInState) 
-                } else{
-                        history.push("/polls/"+id);
-                    }
-                })
+                else if (data.status == 403) {
+                    onLogoutClick(history, SIGN_IN, setIsUserLoggedInState)
+                } else {
+                    history.push("/polls/" + id);
+                }
+            })
         }
     };
 
     const articleViewContainerStyle = articleViewContainerStyleSheet();
 
-    function getPollOptions(poll){
-       return poll.answers.map((item) => {
-                return (
-                    <li key={item._id}>
-                        <button onClick={(event) => submitVote(event,poll)} data-id={item._id}>
-                            {item.name} - {item.votes} Votes
-                        </button>
-                    </li>
-                );
-            });
+    function getPollOptions(poll) {
+        return poll.answers.map((item) => {
+            return (
+                <li key={item._id}>
+                    <button onClick={(event) => submitVote(event, poll)} data-id={item._id}>
+                        {item.name} - {item.votes} Votes
+                    </button>
+                </li>
+            );
+        });
     }
 
-    
     return (
         <div style={articleViewContainerStyle} >
             <div className="poll">
@@ -91,11 +91,13 @@ function PollView({setIsUserLoggedInState}) {
                 </ul>
                 <p>Total Votes: {totalVotes}</p>
                 {errorMessage && (
-                <p className="error"> {errorMessage} </p>
+                    <p className="error"> {errorMessage} </p>
                 )}
+                <div style={{ textAlign: "right" }}>{getReadableDateTime(poll.createdAt)}</div>
             </div>
         </div>
     );
 }
 
 export { PollView };
+

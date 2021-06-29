@@ -1,5 +1,6 @@
 import React from 'react';
-import { commentItemStyleSheet } from './commentStyles';
+import { getReadableDateTime } from '../../constants/common';
+import { commentItemStyle } from './commentStyles';
 
 function CommentList({ comments }) {
     const containerStyle = {
@@ -7,7 +8,6 @@ function CommentList({ comments }) {
         flexDirection: "column",
         flexWrap: "wrap",
     };
-    const commentItemStyle = commentItemStyleSheet();
 
     const textAlignLeftStyle = {
         textAlign: "left",
@@ -24,6 +24,7 @@ function CommentList({ comments }) {
                     <div style={commentItemStyle} key={comment.id}>
                         <div style={textAlignLeftStyle}>{comment.username}:</div>
                         <h4 style={textAlignLeftStyle}>{comment.comment}</h4>
+                        <div style={{ textAlign: "right" }}>{getReadableDateTime(comment.createdAt)}</div>
                     </div>
                 ))
             }
@@ -32,3 +33,4 @@ function CommentList({ comments }) {
 };
 
 export { CommentList };
+

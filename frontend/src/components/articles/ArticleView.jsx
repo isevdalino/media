@@ -7,6 +7,7 @@ import { fetchRating, postRating } from "../../server-requests/requests";
 import { onLogoutClick } from '../login/logoutHandler';
 import { useHistory } from 'react-router';
 import { SIGN_IN } from "../../constants/Paths";
+import { getReadableDateTime } from "../../constants/common";
 
 function ArticleView({ article, isUserLoggedInState,setIsUserLoggedInState }) {
   const articleViewContainerStyle = articleViewContainerStyleSheet();
@@ -63,6 +64,7 @@ function ArticleView({ article, isUserLoggedInState,setIsUserLoggedInState }) {
       <div style={midRatingStyle}>
         Rating: {rating}/10.0
       </div>
+      <div style={{ textAlign: "right" }}>{getReadableDateTime(article.createdAt)}</div>
     </div>
   );
 }
