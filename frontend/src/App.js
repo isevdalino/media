@@ -58,7 +58,7 @@ function App() {
             <ShowAllPollsView isUserLoggedInState={isUserLoggedInState} />
           </Route>
           <Route path="/polls/:id" >
-            <PollView setIsUserLoggedInState={setIsUserLoggedInState} />
+            <PollView isUserLoggedInState={isUserLoggedInState} setIsUserLoggedInState={setIsUserLoggedInState} />
           </Route>
           <Route path={CREATE_POLL} component={CreatePollView}>
             <CreatePollView setIsUserLoggedInState={setIsUserLoggedInState} />

@@ -8,7 +8,7 @@ import { articleViewContainerStyleSheet } from "../articles/articlesStyles";
 import { onLogoutClick } from '../login/logoutHandler';
 import "./pollStyles.css";
 
-function PollView({ setIsUserLoggedInState }) {
+function PollView({ isUserLoggedInState, setIsUserLoggedInState }) {
     let { id } = useParams();
     const [poll, setPoll] = useState([]);
     const [voted, setVoted] = useState(false);
@@ -74,7 +74,7 @@ function PollView({ setIsUserLoggedInState }) {
         return poll.answers.map((item) => {
             return (
                 <li key={item._id}>
-                    <button onClick={(event) => submitVote(event, poll)} data-id={item._id}>
+                    <button disabled={!isUserLoggedInState} onClick={(event) => submitVote(event, poll)} data-id={item._id}>
                         {item.name} - {item.votes} Votes
                     </button>
                 </li>

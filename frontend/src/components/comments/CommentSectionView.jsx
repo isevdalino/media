@@ -6,7 +6,7 @@ import { fetchComments } from "../../server-requests/requests";
 import { CommentList } from "./CommentList";
 import { CreateCommentView } from "./CreateCommentView";
 
-function CommentSectionView({ articleId, setIsUserLoggedInState }) {
+function CommentSectionView({ articleId, isUserLoggedInState, setIsUserLoggedInState }) {
     let [comments, setComments] = useState([]);
     let [onCommentAdded, setOnCommentAdded] = useState("");
     const [hasMoreElements, setHasMoreElements] = useState(true);
@@ -38,8 +38,9 @@ function CommentSectionView({ articleId, setIsUserLoggedInState }) {
     return (
         <div style={containerStyle}>
             <h3>Comments:</h3>
-            <CreateCommentView articleId={articleId} setOnCommentAdded={setOnCommentAdded} setIsUserLoggedInState={setIsUserLoggedInState} />
-
+            {isUserLoggedInState &&
+                <CreateCommentView articleId={articleId} setOnCommentAdded={setOnCommentAdded} setIsUserLoggedInState={setIsUserLoggedInState} />
+            }
             <div id="scrollableDiv" style={previousCommentsStyle}>
                 <InfiniteScroll
                     dataLength={comments.length}

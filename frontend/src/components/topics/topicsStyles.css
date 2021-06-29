@@ -1,0 +1,18 @@
+.topicStyle {
+    background-color: white;
+    box-shadow: rgb(0 0 0 / 20%) 0px 4px 8px 0px;
+    margin: 10px 5px;
+    text-align: center;
+    font-size: medium;
+    font-family: "Fira Sans", sans-serif;
+    padding: 15px;
+    cursor: pointer;
+    width: 200px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.topicStyle:hover {
+    background-color: #cfe9ff;
+  }

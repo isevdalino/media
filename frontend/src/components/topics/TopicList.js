@@ -6,7 +6,7 @@ const TopicList = ({ topics }) => {
         display: "flex",
         flexDirection: "row",
         flexWrap: "wrap",
-        justifyContent: "flex-start"
+        justifyContent: "center",
     };
 
     const isArrayEmpty = topics === undefined || topics.length == 0;

@@ -43,6 +43,7 @@ function HomePage() {
         boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2)",
         margin: "10px 5px",
         color: "black",
+        border: "none"
     };
 
     const history = useHistory();
@@ -51,7 +52,8 @@ function HomePage() {
     const topicsContainer = {
         display: "flex",
         flexDirection: "row",
-        justifyContent: "flex-start"
+        justifyContent: "flex-start",
+        background: "aliceblue"
     };
 
     return (

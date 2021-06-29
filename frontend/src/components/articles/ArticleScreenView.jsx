@@ -26,7 +26,7 @@ function ArticleScreenView({ isUserLoggedInState,setIsUserLoggedInState }) {
     return (
         <div style={topMargin}>
             <ArticleView article={article} isUserLoggedInState={isUserLoggedInState} setIsUserLoggedInState={setIsUserLoggedInState}/>
-            <CommentSectionView articleId={id} setIsUserLoggedInState={setIsUserLoggedInState}/>
+            <CommentSectionView articleId={id} isUserLoggedInState={isUserLoggedInState} setIsUserLoggedInState={setIsUserLoggedInState}/>
         </div>
     );
 }
