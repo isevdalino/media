@@ -52,8 +52,13 @@ function App() {
           <Route exact path={PHOTO_ARTICLES}>
             <ShowAllPhotoArticlesView isUserLoggedInState={isUserLoggedInState} />
           </Route>
-          <Route path={CREATE_PHOTO_ARTICLE} component={CreatePhotoArticleView} />
-          <Route path="/photo-articles/:id" component={PhotoArticleScreenView} />
+          <Route path={CREATE_PHOTO_ARTICLE} >
+            <CreatePhotoArticleView setIsUserLoggedInState={setIsUserLoggedInState} />
+          </Route>
+          <Route path="/photo-articles/:id" >
+            <PhotoArticleScreenView isUserLoggedInState={isUserLoggedInState} setIsUserLoggedInState={setIsUserLoggedInState}/>
+          </Route>
+          
           <Route exact path={POLLS}>
             <ShowAllPollsView isUserLoggedInState={isUserLoggedInState} />
           </Route>

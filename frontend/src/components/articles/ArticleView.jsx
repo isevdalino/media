@@ -57,7 +57,7 @@ function ArticleView({ article, isUserLoggedInState,setIsUserLoggedInState }) {
   return (
     <div style={articleViewContainerStyle}>
       <h3 style={titleStyle}>{article.title}</h3>
-      <div style={authorStyle}>--- {article.authorName} ---</div>
+      <div> <a href={SEARCH + '?a=' + article.authorName} style={authorStyle}>{article.authorName}</a></div>
       <p style={contentStyle}>{article.content}</p>
       <p><a href={SEARCH + '?t=' + article.topic} style={topicLinkStyle}>{article.topic}</a></p>
       <ReactStars {...ratingView} onChange={(value) => onChangeRating(value)} />

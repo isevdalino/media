@@ -2,8 +2,7 @@ import { useParams } from "react-router";
 import { ArticleView } from "./ArticleView";
 import { CommentSectionView } from "../comments/CommentSectionView"
 import { useEffect, useState } from "react";
-import { SERVER_ADDRESS } from "../../constants/Paths";
-import { Article } from "../../models/article";
+import { fetchArticle } from "../../server-requests/requests";
 
 function ArticleScreenView({ isUserLoggedInState,setIsUserLoggedInState }) {
     let { id } = useParams();
@@ -14,13 +13,8 @@ function ArticleScreenView({ isUserLoggedInState,setIsUserLoggedInState }) {
     };
 
     useEffect(() => {
-        const requestOptions = {
-            method: 'GET'
-        };
-
-        fetch(SERVER_ADDRESS + "articles/" + id, requestOptions)
-            .then(response => response.json())
-            .then(data => setArticle(new Article(data._id, data.name, data.authorName, data.content, data.topic)));
+        fetchArticle(id,false)
+            .then(newArticle => setArticle(newArticle));
     }, []);
 
     return (

@@ -26,7 +26,9 @@ function ShowAllArticlesView({ isUserLoggedInState }) {
             });
     };
 
-    useEffect(() => fetchArticlesFunction(), []);
+    useEffect(() => {
+        fetchArticles(0,false).then(newArticles => setArticles(newArticles));
+    }, []);
 
     return (
         <div style={{ marginTop: "60px" }}>

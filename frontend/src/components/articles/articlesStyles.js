@@ -75,7 +75,6 @@ function titleStyleSheet() {
 
 function authorStyleSheet() {
     return {
-        color: "Grey",
         float: "right"
     };
 };

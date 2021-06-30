@@ -7,7 +7,6 @@ const validateCreatePollInput = require("../../validation/createPoll");
 const validateGetPollByIdInput = require("../../validation/getPollById");
 const validatePutPollByIdInput = require("../../validation/putPollById");
 const validateGetPollsByAuthorNameInput = require("../../validation/getPollsByAuthorName");
-const validateSearchPollsInput = require("../../validation/searchPolls");
 
 const Poll = require("../../models/Poll");
 
@@ -99,23 +98,16 @@ router.put("/:pollId", (req, res) => {
             }
 
             var userId = authData.id
-            console.log("tuka sum beee")
             User.findOne({ _id: userId }).then(user => {
-                console.log("vutre sum beee")
                 var username = user.name
 
                 Poll.findOne({ _id: req.params.pollId }).lean().then(poll => {
-                    console.log("bash vutre sum beee")
-                    console.log(req)
-
                     poll.voters  = !isEmpty(poll.voters) ? poll.voters : [];
                     for (var index in poll.voters) {
                         if (poll.voters[index] == username){
                             return res.status(409).json({ error: "You already voted in this poll" });
                         }
                     }
-
-                    console.log("ne sum glasuval")
 
                     for (var index in poll.answers) {
                         if (poll.answers[index].name == req.body.answer){
@@ -142,16 +134,17 @@ router.get("/", (req, res) => {
 });
 
 router.get("/search/:keywords", (req, res) => {
-    const { errors, isValid } = validateSearchPollsInput(req.params);
-    if (!isValid) {
-        return res.status(400).json(errors);
-    }
-
     var limit  = !isEmpty(req.query.limit) ? req.query.limit : 0;
     var limitNumber = parseInt(limit, 10);
-    Poll.find({$text: {$search: req.params.keywords}}).sort({createdAt: -1}).limit(limitNumber).then(polls => {
-        res.send(JSON.stringify(polls))
-    });
+    if(req.params.keywords=== "\"\""){
+        Poll.find({}).sort({createdAt: -1}).limit(limitNumber).then(polls => {
+            res.send(JSON.stringify(polls))
+        });
+    }else{
+        Poll.find({$text: {$search: req.params.keywords}}).sort({createdAt: -1}).limit(limitNumber).then(polls => {
+            res.send(JSON.stringify(polls))
+        });
+    }
 });
 
 module.exports = router;

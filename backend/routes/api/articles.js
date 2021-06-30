@@ -7,7 +7,6 @@ const validateCreateArticleInput = require("../../validation/createArticle");
 const validateGetArticlesByAuthorNameInput = require("../../validation/getArticlesByAuthorName");
 const validateGetArticleByIdInput = require("../../validation/getArticleById");
 const validateGetArticlesByTopicInput = require("../../validation/getArticlesByTopic");
-const validateSearchArticlesInput = require("../../validation/searchArticles");
 
 const Article = require("../../models/Article");
 const Topic = require("../../models/Topic");
@@ -114,17 +113,19 @@ router.get("/", (req, res) => {
 });
 
 router.get("/search/:keywords", (req, res) => {
-    const { errors, isValid } = validateSearchArticlesInput(req.params);
-    if (!isValid) {
-        return res.status(400).json(errors);
-    }
-   
     var limit  = !isEmpty(req.query.limit) ? req.query.limit : 0;
     var isPhotoArticle  = !isEmpty(req.query.isPhotoArticle) ? req.query.isPhotoArticle : false;
     var limitNumber = parseInt(limit, 10);
-    Article.find({isPhotoArticle: isPhotoArticle,$text: {$search: req.params.keywords}}).sort({createdAt: -1}).limit(limitNumber).then(article => {
-        res.send(JSON.stringify(article))
-    });
+
+    if(req.params.keywords === "\"\""){
+        Article.find({isPhotoArticle: isPhotoArticle}).sort({createdAt: -1}).limit(limitNumber).then(article => {
+            res.send(JSON.stringify(article))
+        });
+    }else{
+        Article.find({isPhotoArticle: isPhotoArticle,$text: {$search: req.params.keywords}}).sort({createdAt: -1}).limit(limitNumber).then(article => {
+            res.send(JSON.stringify(article))
+        });
+    }
 });
 
 module.exports = router;

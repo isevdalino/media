@@ -24,11 +24,11 @@ function CreateArticleView({setIsUserLoggedInState}) {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        postArticle(register.title,register.topic,register.content).then(data => {
+        postArticle(register.title,register.topic,register.content,false).then(data => {
             if(data.status == 403){
                 onLogoutClick(history,SIGN_IN, setIsUserLoggedInState) 
             }else{
-                history.push("/articles/"+data.json()._id);
+                data.json().then(data =>history.push("/articles/"+data._id))
             }
         })
     }

@@ -23,7 +23,8 @@ function HomePage() {
     const [events, setEvents] = useState([]);
 
     useEffect(() => {
-        fetchArticles(8).then(newArticles => setArticles(newArticles));
+        fetchArticles(8,false).then(newArticles => setArticles(newArticles));
+        fetchArticles(8,true).then(newPhotoArticles => setPhotoArticles(newPhotoArticles));
         fetchTopics(4).then(newTopics => setTopics(newTopics));
         fetchPolls(8).then(newPolls => setPolls(newPolls));
         fetchEvents(8).then(newEvents => setEvents(newEvents));

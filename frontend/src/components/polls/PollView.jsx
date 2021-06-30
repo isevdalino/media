@@ -7,6 +7,7 @@ import { fetchPoll, putPoll } from "../../server-requests/requests";
 import { articleViewContainerStyleSheet } from "../articles/articlesStyles";
 import { onLogoutClick } from '../login/logoutHandler';
 import "./pollStyles.css";
+import { SEARCH } from "../../constants/Paths";
 
 function PollView({ isUserLoggedInState, setIsUserLoggedInState }) {
     let { id } = useParams();
@@ -16,6 +17,12 @@ function PollView({ isUserLoggedInState, setIsUserLoggedInState }) {
     const [pollOptions, setPollOptions] = useState([]);
     const history = useHistory();
     const [errorMessage, setErrorMessage] = useState('');
+
+    function authorStyleSheet() {
+        return {
+            float: "right"
+        };
+    };
 
     useEffect(() => {
         fetchPoll(id).then(poll => {
@@ -94,6 +101,7 @@ function PollView({ isUserLoggedInState, setIsUserLoggedInState }) {
                     <p className="error"> {errorMessage} </p>
                 )}
                 <div style={{ textAlign: "right" }}>{getReadableDateTime(poll.createdAt)}</div>
+                <div> <a href={SEARCH + '?a=' + poll.authorName} style={authorStyleSheet()}>{poll.authorName}</a></div>
             </div>
         </div>
     );

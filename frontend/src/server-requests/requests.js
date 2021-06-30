@@ -6,12 +6,12 @@ import { USER_LOGIN_TOKEN_LOCAL_STORAGE_KEY } from "../constants/constants";
 import { Comment } from "../models/comment";
 import { Event } from "../models/event";
 
-function fetchArticles(limit) {
+function fetchArticles(limit,fetchPhotoArticles) {
     const requestOptions = {
         method: 'GET'
     };
 
-    return fetch(SERVER_ADDRESS + "articles?limit=" + limit, requestOptions)
+    return fetch(SERVER_ADDRESS + `articles?limit=${limit}&isPhotoArticle=${fetchPhotoArticles}`, requestOptions)
         .then(response => response.json())
         .then(data =>
             data.map(article =>
@@ -20,9 +20,62 @@ function fetchArticles(limit) {
         );
 };
 
-function postArticle(name, topic, content) {
-    const body = JSON.stringify({ name: name, topic: topic, content: content });
+function searchArticles(limit,keywords,fetchPhotoArticles) {
+    const requestOptions = {
+        method: 'GET'
+    };
 
+    return fetch(SERVER_ADDRESS + `articles/search/${keywords}?limit=${limit}&isPhotoArticle=${fetchPhotoArticles}`, requestOptions)
+        .then(response => response.json())
+        .then(data =>
+            data.map(article =>
+                new Article(article._id, article.name, article.authorName, article.content, article.topic)
+            )
+        );
+};
+
+function fetchArticlesByTopic(limit,topic,fetchPhotoArticles) {
+    const requestOptions = {
+        method: 'GET'
+    };
+
+    return fetch(SERVER_ADDRESS + `articles/topic/${topic}?limit=${limit}&isPhotoArticle=${fetchPhotoArticles}`, requestOptions)
+        .then(response => response.json())
+        .then(data =>
+            data.map(article =>
+                new Article(article._id, article.name, article.authorName, article.content, article.topic)
+            )
+        );
+};
+
+function fetchArticlesByAuthorName(limit,authorName,fetchPhotoArticles) {
+    const requestOptions = {
+        method: 'GET'
+    };
+
+    return fetch(SERVER_ADDRESS + `articles/authorName/${authorName}?limit=${limit}&isPhotoArticle=${fetchPhotoArticles}`, requestOptions)
+        .then(response => response.json())
+        .then(data =>
+            data.map(article =>
+                new Article(article._id, article.name, article.authorName, article.content, article.topic)
+            )
+        );
+};
+
+function fetchArticle(id,isPhotoArticle) {
+    const requestOptions = {
+        method: 'GET'
+    };
+
+    return fetch(SERVER_ADDRESS + `articles/${id}?isPhotoArticle=${isPhotoArticle}`, requestOptions)
+        .then(response => response.json())
+        .then(article =>
+                new Article(article._id, article.name, article.authorName, article.content, article.topic)
+        );
+};
+
+function postArticle(name,topic,content,isPhotoArticle){
+    const body = JSON.stringify({ name: name, topic: topic, content: content,isPhotoArticle: isPhotoArticle});
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': localStorage.getItem(USER_LOGIN_TOKEN_LOCAL_STORAGE_KEY) },
@@ -85,6 +138,36 @@ function fetchEvents(limit) {
         .then(data =>
             data.map(event =>
                 new Event(event._id, event.name, event.authorName, event.description, event.createdAt)
+            )
+        );
+}
+
+function searchPolls(limit,keywords) {
+    const requestOptions = {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+    };
+
+    return fetch(SERVER_ADDRESS +`polls/search/${keywords}?limit=${limit}`, requestOptions)
+        .then(response => response.json())
+        .then(data =>
+            data.map(poll =>
+                new Poll(poll._id, poll.name, poll.authorNames, poll.answers)
+            )
+        );
+}
+
+function fetchPollsByAuthorName(limit,authorName) {
+    const requestOptions = {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+    };
+
+    return fetch(SERVER_ADDRESS +`polls/authorName/${authorName}?limit=${limit}`, requestOptions)
+        .then(response => response.json())
+        .then(data =>
+            data.map(poll =>
+                new Poll(poll._id, poll.name, poll.authorNames, poll.answers)
             )
         );
 }
@@ -186,7 +269,19 @@ function postComment(articleId, comment) {
     return fetch(SERVER_ADDRESS + "comments/" + articleId, requestOptions)
 }
 
+function resetPassword(email) {
+    const body = JSON.stringify({ email: email });
+
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: body
+    };
+
+    return fetch(SERVER_ADDRESS + "users/resetPassword", requestOptions)
+}
+
 export {
     fetchArticles, fetchTopics, fetchPolls, fetchPoll, putPoll, postPoll, postRating, fetchRating,
-    fetchComments, postComment, postArticle, postEvent, fetchEvents, fetchEvent
+    fetchComments, postComment,postArticle,fetchArticle,searchArticles,searchPolls,fetchArticlesByTopic,fetchArticlesByAuthorName,fetchPollsByAuthorName,resetPassword,postEvent, fetchEvents, fetchEvent
 };

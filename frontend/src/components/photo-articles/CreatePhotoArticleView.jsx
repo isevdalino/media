@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import { articleViewContainerStyleSheet } from "../articles/articlesStyles";
-import { useForm } from "react-hook-form";
+import { useHistory } from 'react-router';
+import { postArticle } from "../../server-requests/requests";
+import { SIGN_IN } from "../../constants/Paths";
+import { onLogoutClick } from '../login/logoutHandler';
 
-function CreatePhotoArticleView() {
+function CreatePhotoArticleView({setIsUserLoggedInState}) {
     const articleViewContainerStyle = articleViewContainerStyleSheet();
     const inputStyle = {
         display: "flex",
@@ -13,28 +16,72 @@ function CreatePhotoArticleView() {
         margin: "45px"
     };
 
-    const { register, handleSubmit, watch, formState: { errors } } = useForm();
-    const onSubmit = data => console.log(data);
-
     const [file, setFile] = useState("");
     const [imagePreviewUrl, setImagePreviewUrl] = useState("");
+    const [base64Image, setBase64Image] = useState("");
+    const [register, setRegister] = useState({});
+    const [formErrors, setFormErrors] = useState({});
+    const [errorUiList, setErrorUiList] = useState([]);
+    const history = useHistory();
+
+    const changeErrorsWith = function (newErrors) {
+        setFormErrors(newErrors);
+
+        let errorList = Object.keys(formErrors).map(
+            key => (<li key={key} className="error-style">{formErrors[key]}</li>)
+        );
+        setErrorUiList(errorList);
+    }
+
+    const handleChange = function (e) {
+        const name = e.target.name;
+        const value = e.target.value;
+        let currentFormErrors = formErrors;
+
+        switch (name) {
+            case 'title':
+                setRegister({ ...register, title: value });
+                break;
+            case 'topic':
+                setRegister({ ...register, topic: value });
+                break;
+            default:
+                break;
+        }
+
+        changeErrorsWith(currentFormErrors);
+    };
 
     const handleImageChange = function (e) {
         e.preventDefault();
 
-        let reader = new FileReader();
-        let fileName = e.target.files[0];
-        const isImage = isFileImage(fileName);
-        console.log("is file image: " + isImage);
-        reader.onloadend = () => {
-            if (isImage) {
-                setFile(fileName);
-                setImagePreviewUrl(reader.result);
+        new Promise((resolve, reject) => {
+             let fileName = e.target.files[0];
+            const reader = new FileReader();
+            reader.readAsDataURL(fileName);
+            const isImage = isFileImage(fileName)
+            reader.onload = () => {
+                if (isImage) {
+                    setFile(fileName);
+                    setImagePreviewUrl(reader.result);
+                }
+                resolve(reader.result);
             }
-        }
-
-        reader.readAsDataURL(fileName)
+            reader.onerror = error => reject(error);
+        }).then(result=>setBase64Image(result))
     };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        postArticle(register.title,register.topic,base64Image,true).then(data => {
+            if(data.status == 403){
+                onLogoutClick(history,SIGN_IN, setIsUserLoggedInState) 
+            }else{
+                data.json().then(data =>history.push("/photo-articles/"+data._id))
+            }
+        })
+    }
 
     const isFileImage = function (file) {
         return file && file['type'].split('/')[0] === 'image';
@@ -60,11 +107,10 @@ function CreatePhotoArticleView() {
     return (
         <div style={articleViewContainerStyle}>
             <h3 className="text-center">Upload photo to our gallery</h3>
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form noValidate onSubmit={handleSubmit}>
                 <div style={inputStyle}>
-                    {/* register your input into the hook by invoking the "register" function */}
-                    <input style={inputFieldStyle} type="text" defaultValue="Title" {...register("title", { required: true })} />
-                    {errors.title && <span>This field is required</span>}
+                    <input style={inputFieldStyle} type="text" defaultValue="Title" name="title" noValidate onBlur={handleChange}/>
+                    <input style={inputFieldStyle} type="text" defaultValue="Topic" name="topic" noValidate onBlur={handleChange}/>
 
                     <div style={previewComponentStyle}>
                         <input type="file" onChange={(e) => handleImageChange(e)} />
