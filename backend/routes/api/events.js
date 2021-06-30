@@ -81,16 +81,17 @@ router.get("/", (req, res) => {
 });
 
 router.get("/search/:keywords", (req, res) => {
-    const { errors, isValid } = validateSearchEventsInput(req.params);
-    if (!isValid) {
-        return res.status(400).json(errors);
-    }
-
     var limit  = !isEmpty(req.query.limit) ? req.query.limit : 0;
     var limitNumber = parseInt(limit, 10);
-    Event.find({$text: {$search: req.params.keywords}}).sort({createdAt: -1}).limit(limitNumber).then(events => {
-        res.send(JSON.stringify(events))
-    });
+    if(req.params.keywords=== "\"\""){
+        Event.find({}).sort({createdAt: -1}).limit(limitNumber).then(events => {
+            res.send(JSON.stringify(events))
+        });
+    } else{
+        Event.find({$text: {$search: req.params.keywords}}).sort({createdAt: -1}).limit(limitNumber).then(events => {
+            res.send(JSON.stringify(events))
+        });
+    }
 });
 
 module.exports = router;

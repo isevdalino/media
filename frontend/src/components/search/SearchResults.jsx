@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import ArticleList from '../articles/ArticleList';
 import { containerStyleSheet } from '../articles/articlesStyles.js'
 import PhotoArticleList from "../photo-articles/PhotoArticleList";
-import { searchArticles,searchPolls,fetchArticlesByTopic ,fetchPollsByAuthorName,fetchArticlesByAuthorName} from "../../server-requests/requests";
+import { searchArticles,searchPolls,fetchArticlesByTopic ,fetchPollsByAuthorName,fetchArticlesByAuthorName,searchEvents,fetchEventsByAuthorName} from "../../server-requests/requests";
 import PollList from "../polls/PollList";
+import EventList from "../events/EventList";
 
 function SearchResults() {
     const { search } = window.location;
@@ -16,6 +17,7 @@ function SearchResults() {
     const [articles, setArticles] = useState([]);
     const [photoArticles, setPhotoArticles] = useState([]);
     const [polls, setPolls] = useState([]);
+    const [events, setEvents] = useState([]);
 
     const containerStyle = containerStyleSheet();
     const topMargin = {
@@ -24,8 +26,6 @@ function SearchResults() {
 
     useEffect(() => {
         var keywords = "\"\""
-        console.log(searchQuery)
-        console.log(searchByStringQuery)
         if (searchQuery) {
             keywords = searchQuery
         } 
@@ -37,15 +37,18 @@ function SearchResults() {
             searchArticles(0,keywords,false).then(newArticles => setArticles(newArticles));
             searchArticles(0,keywords,true).then(newPhotoArticles => setPhotoArticles(newPhotoArticles));
             searchPolls(0,keywords).then(newPolls => setPolls(newPolls));
+            searchEvents(0,keywords).then(newEvents => setEvents(newEvents));
         }
         else if(searchByAuthorNameQuery){
             fetchArticlesByAuthorName(0,keywords,false).then(newArticles => setArticles(newArticles));
             fetchArticlesByAuthorName(0,keywords,true).then(newPhotoArticles => setPhotoArticles(newPhotoArticles));
             fetchPollsByAuthorName(0,keywords).then(newPolls => setPolls(newPolls));
+            fetchEventsByAuthorName(0,keywords).then(newEvents => setEvents(newEvents));
         }else{
             searchArticles(0,keywords,false).then(newArticles => setArticles(newArticles));
             searchArticles(0,keywords,true).then(newPhotoArticles => setPhotoArticles(newPhotoArticles));
             searchPolls(0,keywords).then(newPolls => setPolls(newPolls));
+            searchEvents(0,keywords).then(newEvents => setEvents(newEvents));
         }
     }, []);
 
@@ -78,6 +81,10 @@ function SearchResults() {
             <div style={containerStyle}>
                 <h3 className="text-center">Polls</h3>
                 <PollList polls={polls} />
+            </div>
+            <div style={containerStyle}>
+                <h3 className="text-center">Events</h3>
+                <EventList events={events} />
             </div>
         </div>
     );

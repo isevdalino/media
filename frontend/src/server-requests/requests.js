@@ -142,6 +142,36 @@ function fetchEvents(limit) {
         );
 }
 
+function searchEvents(limit,keywords) {
+    const requestOptions = {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+    };
+
+    return fetch(SERVER_ADDRESS + `events/search/${keywords}?limit=${limit}`, requestOptions)
+        .then(response => response.json())
+        .then(data =>
+            data.map(event =>
+                new Event(event._id, event.name, event.authorName, event.description, event.createdAt)
+            )
+        );
+}
+
+function fetchEventsByAuthorName(limit,authorName) {
+    const requestOptions = {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+    };
+
+    return fetch(SERVER_ADDRESS + `events/authorName/${authorName}?limit=${limit}`, requestOptions)
+        .then(response => response.json())
+        .then(data =>
+            data.map(event =>
+                new Event(event._id, event.name, event.authorName, event.description, event.createdAt)
+            )
+        );
+}
+
 function searchPolls(limit,keywords) {
     const requestOptions = {
         method: 'GET',
@@ -283,5 +313,5 @@ function resetPassword(email) {
 
 export {
     fetchArticles, fetchTopics, fetchPolls, fetchPoll, putPoll, postPoll, postRating, fetchRating,
-    fetchComments, postComment,postArticle,fetchArticle,searchArticles,searchPolls,fetchArticlesByTopic,fetchArticlesByAuthorName,fetchPollsByAuthorName,resetPassword,postEvent, fetchEvents, fetchEvent
+    fetchComments, postComment,postArticle,fetchArticle,searchArticles,searchPolls,fetchArticlesByTopic,fetchArticlesByAuthorName,fetchPollsByAuthorName,resetPassword,postEvent, fetchEvents, fetchEvent,searchEvents,fetchEventsByAuthorName
 };

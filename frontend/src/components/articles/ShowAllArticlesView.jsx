@@ -17,7 +17,7 @@ function ShowAllArticlesView({ isUserLoggedInState }) {
     const [hasMoreElements, setHasMoreElements] = useState(true);
 
     const fetchArticlesFunction = () => {
-        fetchArticles(articles.length + ITEMS_COUNT)
+        fetchArticles(articles.length + ITEMS_COUNT,false)
             .then(newArticles => {
                 if (hasMoreElementsInList(articles, newArticles, ITEMS_COUNT)) {
                     setHasMoreElements(false);

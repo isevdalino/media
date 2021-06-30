@@ -29,7 +29,7 @@ function CreateEventView({ setIsUserLoggedInState }) {
             if (data.status == 403) {
                 onLogoutClick(history, SIGN_IN, setIsUserLoggedInState);
             } else {
-                history.push("/events/" + data.json()._id);
+                data.json().then(data=> history.push("/events/" + data._id));
             }
         });
     }
