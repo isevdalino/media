@@ -1,6 +1,7 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { cardContainerStyleSheet, cardPhotoStyleSheet, cardStyleSheet } from '../articles/articlesStyles';
+import "./photoArticleStyles.css";
 
 const PhotoArticleList = ({ photoArticles }) => {
     const containerStyle = cardContainerStyleSheet();
@@ -18,9 +19,13 @@ const PhotoArticleList = ({ photoArticles }) => {
                 <h4>There aren't any photos yet.</h4>
                 :
                 photoArticles.map(photoArticle => (
-                    <div style={cardStyle} key={photoArticle.id} onClick={(e) => handleClick(photoArticle.id, e)} >
-                        <img style={cardPhotoStyle} src={photoArticle.photoUrl} />
-                        <h4>{photoArticle.title}</h4>
+                    <div key={photoArticle.id} onClick={(e) => handleClick(photoArticle.id, e)} className="responsive">
+                        <div className="gallery">
+                            <a target="_blank">
+                                <img src={photoArticle.content} alt={photoArticle.title} width="600" height="400" />
+                            </a>
+                            <div className="desc">{photoArticle.title}</div>
+                        </div>
                     </div>
                 ))
             }

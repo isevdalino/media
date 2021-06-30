@@ -22,7 +22,7 @@ function cardStyleSheet() {
     return {
         backgroundColor: "white",
         boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2)",
-        width: "200px",
+        width: "250px",
         margin: "10px auto",
         textAlign: "center",
         fontFamily: "arial",

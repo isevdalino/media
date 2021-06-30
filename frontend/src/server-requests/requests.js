@@ -15,7 +15,7 @@ function fetchArticles(limit,fetchPhotoArticles) {
         .then(response => response.json())
         .then(data =>
             data.map(article =>
-                new Article(article._id, article.name, article.authorName, article.content, article.topic)
+                new Article(article._id, article.name, article.authorName, article.content, article.topic, article.createdAt)
             )
         );
 };
@@ -29,7 +29,7 @@ function searchArticles(limit,keywords,fetchPhotoArticles) {
         .then(response => response.json())
         .then(data =>
             data.map(article =>
-                new Article(article._id, article.name, article.authorName, article.content, article.topic)
+                new Article(article._id, article.name, article.authorName, article.content, article.topic, article.createdAt)
             )
         );
 };
@@ -43,7 +43,7 @@ function fetchArticlesByTopic(limit,topic,fetchPhotoArticles) {
         .then(response => response.json())
         .then(data =>
             data.map(article =>
-                new Article(article._id, article.name, article.authorName, article.content, article.topic)
+                new Article(article._id, article.name, article.authorName, article.content, article.topic, article.createdAt)
             )
         );
 };
@@ -57,7 +57,7 @@ function fetchArticlesByAuthorName(limit,authorName,fetchPhotoArticles) {
         .then(response => response.json())
         .then(data =>
             data.map(article =>
-                new Article(article._id, article.name, article.authorName, article.content, article.topic)
+                new Article(article._id, article.name, article.authorName, article.content, article.topic, article.createdAt)
             )
         );
 };
@@ -70,7 +70,7 @@ function fetchArticle(id,isPhotoArticle) {
     return fetch(SERVER_ADDRESS + `articles/${id}?isPhotoArticle=${isPhotoArticle}`, requestOptions)
         .then(response => response.json())
         .then(article =>
-                new Article(article._id, article.name, article.authorName, article.content, article.topic)
+                new Article(article._id, article.name, article.authorName, article.content, article.topic, article.createdAt)
         );
 };
 

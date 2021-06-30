@@ -14,7 +14,7 @@ function PhotoArticleView({ photoArticle,isUserLoggedInState,setIsUserLoggedInSt
     const photoStyle = photoStyleSheet();
     const titleStyle = titleStyleSheet();
     const topicLinkStyle = {
-        float: "left",
+      textAlign: "right",
     };
 
     let [rating, setRating] = useState(0);
@@ -60,7 +60,7 @@ function PhotoArticleView({ photoArticle,isUserLoggedInState,setIsUserLoggedInSt
             <img style={photoStyle} src={photoArticle.content} />
             <h3 style={titleStyle}>{photoArticle.title}</h3>
             <div> <a href={SEARCH + '?a=' + photoArticle.authorName} style={{ color: "Grey", textAlign: "right" }}>{photoArticle.authorName}</a></div>
-            <p><a href={SEARCH + '?t=' + photoArticle.topic} style={topicLinkStyle}>{photoArticle.topic}</a></p>
+            <p style={topicLinkStyle}><a href={SEARCH + '?t=' + photoArticle.topic}>{photoArticle.topic}</a></p>
             <div style={{ textAlign: "right" }}>{getReadableDateTime(photoArticle.createdAt)}</div>
             <ReactStars {...ratingView} onChange={(value) => onChangeRating(value)} />
             <div style={midRatingStyle}>

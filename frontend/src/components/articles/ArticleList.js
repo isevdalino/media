@@ -5,14 +5,13 @@ const ArticleList = ({ articles }) => {
     const containerStyle = cardContainerStyleSheet();
     const cardStyle = cardStyleSheet();
     const cutText = {
-        width: "190px",
+        width: "230px",
         whiteSpace: "nowrap",
         overflow: "hidden",
         textOverflow: "ellipsis",
         padding: "10px",
         fontSize: "1.3rem",
         background: "white",
-        resize: "horizontal"
     };
 
     const history = useHistory();
@@ -28,7 +27,7 @@ const ArticleList = ({ articles }) => {
                 articles.map(article => (
                     <div style={cardStyle} key={article.id} onClick={(e) => handleClick(article.id, e)} >
                         <h4>{article.title}</h4>
-                        <p style={cutText}>{article.content}</p>
+                        <div style={cutText}>{article.content}</div>
                     </div>
                 ))
             }

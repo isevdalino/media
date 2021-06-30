@@ -5,7 +5,7 @@ import { postArticle } from "../../server-requests/requests";
 import { SIGN_IN } from "../../constants/Paths";
 import { onLogoutClick } from '../login/logoutHandler';
 
-function CreatePhotoArticleView({setIsUserLoggedInState}) {
+function CreatePhotoArticleView({ setIsUserLoggedInState }) {
     const articleViewContainerStyle = articleViewContainerStyleSheet();
     const inputStyle = {
         display: "flex",
@@ -33,6 +33,11 @@ function CreatePhotoArticleView({setIsUserLoggedInState}) {
         setErrorUiList(errorList);
     }
 
+    const changeFile = function (fileName, url) {
+        setFile(fileName);
+        setImagePreviewUrl(url);
+    }
+
     const handleChange = function (e) {
         const name = e.target.name;
         const value = e.target.value;
@@ -56,29 +61,36 @@ function CreatePhotoArticleView({setIsUserLoggedInState}) {
         e.preventDefault();
 
         new Promise((resolve, reject) => {
-             let fileName = e.target.files[0];
+            let fileName = e.target.files[0];
+            if (fileName == null) {
+                throw new Error("File was not chosen");
+            }
             const reader = new FileReader();
             reader.readAsDataURL(fileName);
             const isImage = isFileImage(fileName)
             reader.onload = () => {
                 if (isImage) {
-                    setFile(fileName);
-                    setImagePreviewUrl(reader.result);
+                    changeFile(fileName, reader.result);
                 }
                 resolve(reader.result);
             }
             reader.onerror = error => reject(error);
-        }).then(result=>setBase64Image(result))
+        })
+            .then(result => setBase64Image(result))
+            .catch(e => {
+                console.error(e);
+                changeFile("", "");
+            })
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        postArticle(register.title,register.topic,base64Image,true).then(data => {
-            if(data.status == 403){
-                onLogoutClick(history,SIGN_IN, setIsUserLoggedInState) 
-            }else{
-                data.json().then(data =>history.push("/photo-articles/"+data._id))
+        postArticle(register.title, register.topic, base64Image, true).then(data => {
+            if (data.status == 403) {
+                onLogoutClick(history, SIGN_IN, setIsUserLoggedInState)
+            } else {
+                data.json().then(data => history.push("/photo-articles/" + data._id))
             }
         })
     }
@@ -109,8 +121,8 @@ function CreatePhotoArticleView({setIsUserLoggedInState}) {
             <h3 className="text-center">Upload photo to our gallery</h3>
             <form noValidate onSubmit={handleSubmit}>
                 <div style={inputStyle}>
-                    <input style={inputFieldStyle} type="text" defaultValue="Title" name="title" noValidate onBlur={handleChange}/>
-                    <input style={inputFieldStyle} type="text" defaultValue="Topic" name="topic" noValidate onBlur={handleChange}/>
+                    <input style={inputFieldStyle} type="text" placeholder="Title" name="title" noValidate onBlur={handleChange} />
+                    <input style={inputFieldStyle} type="text" placeholder="Topic" name="topic" noValidate onBlur={handleChange} />
 
                     <div style={previewComponentStyle}>
                         <input type="file" onChange={(e) => handleImageChange(e)} />

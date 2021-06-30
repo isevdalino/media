@@ -24,7 +24,7 @@ function CommentSectionView({ articleId, isUserLoggedInState, setIsUserLoggedInS
     useEffect(() => fetchCommentsFunction(), [onCommentAdded]);
 
     const containerStyle = {
-        margin: "10% auto auto auto",
+        margin: "3% auto auto auto",
         width: "60%",
         background: "#c0bebe",
         padding: "5px",

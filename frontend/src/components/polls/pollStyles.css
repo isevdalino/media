@@ -38,3 +38,8 @@
   .poll ul.results li {
     border-color: #999;
   }
+
+  .error {
+    font-style: italic;
+    color: red;
+  }
