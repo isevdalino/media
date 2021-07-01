@@ -23,6 +23,7 @@ function CreatePhotoArticleView({ setIsUserLoggedInState }) {
     const [formErrors, setFormErrors] = useState({});
     const [errorUiList, setErrorUiList] = useState([]);
     const history = useHistory();
+    const [errorMessage, setErrorMessage] = useState('');
 
     const changeErrorsWith = function (newErrors) {
         setFormErrors(newErrors);
@@ -44,8 +45,8 @@ function CreatePhotoArticleView({ setIsUserLoggedInState }) {
         let currentFormErrors = formErrors;
 
         switch (name) {
-            case 'title':
-                setRegister({ ...register, title: value });
+            case 'name':
+                setRegister({ ...register, name: value });
                 break;
             case 'topic':
                 setRegister({ ...register, topic: value });
@@ -86,10 +87,12 @@ function CreatePhotoArticleView({ setIsUserLoggedInState }) {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        postArticle(register.title, register.topic, base64Image, true).then(data => {
+        postArticle(register.name, register.topic, base64Image, true).then(data => {
             if (data.status == 403) {
                 onLogoutClick(history, SIGN_IN, setIsUserLoggedInState)
-            } else {
+            }else if (data.status == 400) {
+                data.json().then(data => {setErrorMessage(data.name||data.topic||data.content)})
+              } else {
                 data.json().then(data => history.push("/photo-articles/" + data._id))
             }
         })
@@ -121,7 +124,7 @@ function CreatePhotoArticleView({ setIsUserLoggedInState }) {
             <h3 className="text-center">Upload photo to our gallery</h3>
             <form noValidate onSubmit={handleSubmit}>
                 <div style={inputStyle}>
-                    <input style={inputFieldStyle} type="text" placeholder="Title" name="title" noValidate onBlur={handleChange} />
+                    <input style={inputFieldStyle} type="text" placeholder="Name" name="name" noValidate onBlur={handleChange} />
                     <input style={inputFieldStyle} type="text" placeholder="Topic" name="topic" noValidate onBlur={handleChange} />
 
                     <div style={previewComponentStyle}>
@@ -131,6 +134,9 @@ function CreatePhotoArticleView({ setIsUserLoggedInState }) {
                 </div>
                 <input type="submit" />
             </form>
+            {errorMessage && (
+                            <p className="error"> {errorMessage} </p>
+                        )}
         </div>
     );
 }

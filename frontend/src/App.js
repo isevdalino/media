@@ -8,7 +8,7 @@ import { ShowAllArticlesView } from "./components/articles/ShowAllArticlesView";
 import { ShowAllPhotoArticlesView } from "./components/photo-articles/ShowAllPhotoArticlesView";
 import { CreateArticleView } from "./components/articles/CreateArticleView";
 import { CreatePhotoArticleView } from "./components/photo-articles/CreatePhotoArticleView";
-import { SIGN_IN, SIGN_UP, HOME, ARTICLES, PHOTO_ARTICLES, CREATE_ARTICLE, CREATE_POLL, POLLS, CREATE_PHOTO_ARTICLE, CREATE_EVENT, SEARCH, TOPICS, EVENTS } from "./constants/Paths";
+import { SIGN_IN, SIGN_UP, HOME, ARTICLES, PHOTO_ARTICLES, CREATE_ARTICLE, CREATE_POLL, POLLS, CREATE_PHOTO_ARTICLE, CREATE_EVENT, SEARCH, TOPICS, EVENTS, RESET_PASSWORD } from "./constants/Paths";
 import { CreatePollView } from "./components/polls/CreatePollView";
 import { ShowAllPollsView } from "./components/polls/ShowAllPollsView";
 import { PollView } from "./components/polls/PollView";
@@ -16,6 +16,7 @@ import { ArticleScreenView } from './components/articles/ArticleScreenView';
 import { PhotoArticleScreenView } from './components/photo-articles/PhotoArticleScreenView';
 import { SignupView } from './components/login/SingupView';
 import { LoginView } from './components/login/LoginView';
+import { ResetPasswordView } from './components/login/resetPassword';
 import { SearchResults } from './components/search/SearchResults';
 import { ShowAllTopicsView } from './components/topics/ShowAllTopicsView';
 import { ToolbarComponent } from './components/toolbar/ToolbarComponent';
@@ -37,6 +38,9 @@ function App() {
           </Route>
           <Route path={SIGN_IN}>
             <LoginView setIsUserLoggedInState={setIsUserLoggedInState} />
+          </Route>
+          <Route path={RESET_PASSWORD}>
+            <ResetPasswordView/>
           </Route>
           <Route path={SIGN_UP} component={SignupView} />
           <Route path={HOME} component={HomePage} />

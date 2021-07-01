@@ -12,6 +12,7 @@ function CreatePollView({setIsUserLoggedInState}) {
     const [options, setOptions] = useState([]);
     const [title, setTitle] = useState("");
     const history = useHistory();
+    const [errorMessage, setErrorMessage] = useState('');
 
     const handleOptionInput = function (i, e) {
         let newOptions = JSON.parse(JSON.stringify(options));
@@ -39,13 +40,15 @@ function CreatePollView({setIsUserLoggedInState}) {
         }
 
         if (!title || validOptions < 2) {
-            console.log('Each poll must have a title and a minimum of 2 options!');
+            setErrorMessage('Each poll must have a title and a minimum of 2 options!')
             return;
         }
 
         postPoll(title,options).then(data => {
             if(data.status == 403){
                 onLogoutClick(history,SIGN_IN, setIsUserLoggedInState) 
+            }else if (data.status == 400) {
+                data.json().then(data => {setErrorMessage(data.name||data.answers)})
             }else{
                 data.json().then(data =>history.push("/polls/"+data._id))
             }
@@ -88,6 +91,9 @@ function CreatePollView({setIsUserLoggedInState}) {
                 <input type="button" className="btn btn-danger" style={leftButtonStyle} value="-" onClick={removeInputs} />
                 <input type="submit" className="btn btn-success pull-right" style={rightButtonStyle} value="Create Poll"/>
             </form>
+            {errorMessage && (
+                            <p className="error"> {errorMessage} </p>
+                        )}
         </div>
     );
 }

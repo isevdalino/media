@@ -3,7 +3,7 @@ import { articleViewContainerStyleSheet, authorStyleSheet, contentStyleSheet, ti
 import ReactStars from "react-rating-stars-component";
 import { useParams } from "react-router";
 import { SEARCH } from "../../constants/Paths";
-import { fetchRating, postRating } from "../../server-requests/requests";
+import { fetchRating, postRating, fetchNumRating } from "../../server-requests/requests";
 import { onLogoutClick } from '../login/logoutHandler';
 import { useHistory } from 'react-router';
 import { SIGN_IN } from "../../constants/Paths";
@@ -17,6 +17,8 @@ function ArticleView({ article, isUserLoggedInState,setIsUserLoggedInState }) {
   const topicLinkStyle = topicLinkStyleSheet();
 
   let [rating, setRating] = useState(0);
+  let [numRatings, setNumRatings] = useState(0);
+
   let { id } = useParams();
   const history = useHistory();
 
@@ -35,6 +37,8 @@ function ArticleView({ article, isUserLoggedInState,setIsUserLoggedInState }) {
   useEffect(() => {
     fetchRating(id)
       .then(data => setRating(data.rating));
+    fetchNumRating(id)
+      .then(data => setNumRatings(data.numRatings))
   }, [ratingView]);
 
 
@@ -63,6 +67,9 @@ function ArticleView({ article, isUserLoggedInState,setIsUserLoggedInState }) {
       <ReactStars {...ratingView} onChange={(value) => onChangeRating(value)} />
       <div style={midRatingStyle}>
         Rating: {rating}/10.0
+      </div>
+      <div style={midRatingStyle}>
+        Votes: {numRatings}
       </div>
       <div style={{ textAlign: "right" }}>{getReadableDateTime(article.createdAt)}</div>
     </div>

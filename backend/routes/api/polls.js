@@ -7,6 +7,8 @@ const validateCreatePollInput = require("../../validation/createPoll");
 const validateGetPollByIdInput = require("../../validation/getPollById");
 const validatePutPollByIdInput = require("../../validation/putPollById");
 const validateGetPollsByAuthorNameInput = require("../../validation/getPollsByAuthorName");
+const validateHasUserVoted = require("../../validation/hasUserVoted");
+
 
 const Poll = require("../../models/Poll");
 
@@ -131,6 +133,29 @@ router.get("/", (req, res) => {
     Poll.find({}).sort({createdAt: -1}).limit(limitNumber).then(polls => {
         res.send(JSON.stringify(polls))
     });
+});
+
+router.get("/:pollId/hasVoted/:email", (req, res) => {
+    const { errors, isValid } = validateHasUserVoted(req.params);
+    if (!isValid) {
+        return res.status(400).json(errors);
+    }
+
+    User.findOne({ email: req.params.email }).then(user => {
+        var authorName = user.name    
+        Poll.findOne({ _id: req.params.pollId }).then(poll => {
+            var hasVoted = false;
+            for (var index in poll.voters) {
+                if (poll.voters[index] == authorName){
+                    hasVoted= true;
+                    break;
+                }
+            }
+            res.send(JSON.stringify({hasVoted: hasVoted}))
+        });
+
+    })
+
 });
 
 router.get("/search/:keywords", (req, res) => {

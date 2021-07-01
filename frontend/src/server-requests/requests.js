@@ -2,9 +2,21 @@ import { SERVER_ADDRESS } from "../constants/Paths";
 import { Article } from "../models/article";
 import { Topic } from "../models/topic";
 import { Poll } from "../models/poll";
-import { USER_LOGIN_TOKEN_LOCAL_STORAGE_KEY } from "../constants/constants";
+import { USER_LOGIN_TOKEN_LOCAL_STORAGE_KEY,USER_EMAIL_LOCAL_STORAGE_KEY } from "../constants/constants";
 import { Comment } from "../models/comment";
 import { Event } from "../models/event";
+
+function login(email,password){
+    const body = JSON.stringify({ email: email, password: password});
+
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: body
+    };
+
+    return fetch(SERVER_ADDRESS + "users/login", requestOptions)
+}
 
 function fetchArticles(limit,fetchPhotoArticles) {
     const requestOptions = {
@@ -215,6 +227,15 @@ function fetchPoll(id) {
         );
 }
 
+function hasUserVotedInPoll(id) {
+    const requestOptions = {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+    };
+
+    return fetch(SERVER_ADDRESS + `polls/${id}/hasVoted/${localStorage.getItem(USER_EMAIL_LOCAL_STORAGE_KEY)}`, requestOptions)
+}
+
 function fetchEvent(id) {
     const requestOptions = {
         method: 'GET',
@@ -257,6 +278,15 @@ function fetchRating(articleId) {
     };
 
     return fetch(SERVER_ADDRESS + "ratings/" + articleId, requestOptions)
+        .then(response => response.json());
+}
+
+function fetchNumRating(articleId) {
+    const requestOptions = {
+        method: 'GET'
+    };
+
+    return fetch(SERVER_ADDRESS + `ratings/${articleId}/numRatings`, requestOptions)
         .then(response => response.json());
 }
 
@@ -313,5 +343,5 @@ function resetPassword(email) {
 
 export {
     fetchArticles, fetchTopics, fetchPolls, fetchPoll, putPoll, postPoll, postRating, fetchRating,
-    fetchComments, postComment,postArticle,fetchArticle,searchArticles,searchPolls,fetchArticlesByTopic,fetchArticlesByAuthorName,fetchPollsByAuthorName,resetPassword,postEvent, fetchEvents, fetchEvent,searchEvents,fetchEventsByAuthorName
+    fetchComments, postComment,postArticle,fetchArticle,searchArticles,searchPolls,fetchArticlesByTopic,fetchArticlesByAuthorName,fetchPollsByAuthorName,resetPassword,postEvent, fetchEvents, fetchEvent,searchEvents,fetchEventsByAuthorName,login,hasUserVotedInPoll,fetchNumRating
 };

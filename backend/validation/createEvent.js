@@ -9,11 +9,11 @@ module.exports = function validateCreateEventInput(data) {
     data.description = !isEmpty(data.description) ? data.description : "";
 
     if (Validator.isEmpty(data.name)) {
-        errors.name = "name param is required";s
+        errors.name = "name param is required";
     }
 
     if (Validator.isEmpty(data.description)) {
-        errors.content = "description param is required";
+        errors.description = "description param is required";
     }
 
     return {

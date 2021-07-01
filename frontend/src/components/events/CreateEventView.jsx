@@ -20,6 +20,7 @@ function CreateEventView({ setIsUserLoggedInState }) {
     const [formErrors, setFormErrors] = useState({});
     const [errorUiList, setErrorUiList] = useState([]);
     const history = useHistory();
+    const [errorMessage, setErrorMessage] = useState('');
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -28,6 +29,8 @@ function CreateEventView({ setIsUserLoggedInState }) {
             console.log("data");
             if (data.status == 403) {
                 onLogoutClick(history, SIGN_IN, setIsUserLoggedInState);
+            }else if (data.status == 400) {
+                data.json().then(data => {setErrorMessage(data.name||data.description)})
             } else {
                 data.json().then(data=> history.push("/events/" + data._id));
             }
@@ -72,6 +75,9 @@ function CreateEventView({ setIsUserLoggedInState }) {
                 </div>
                 <input type="submit" />
             </form>
+            {errorMessage && (
+                            <p className="error"> {errorMessage} </p>
+                        )}
         </div>
     );
 }

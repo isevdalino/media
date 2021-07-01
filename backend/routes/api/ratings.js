@@ -71,4 +71,19 @@ router.get("/:articleId", (req, res) => {
     });
 });
 
+router.get("/:articleId/numRatings", (req, res) => {
+    const { errors, isValid } = validateGetRatingByArticleIdInput(req.params);
+    if (!isValid) {
+        return res.status(400).json(errors);
+    }
+
+    Rating.find({ articleId: req.params.articleId }).then(ratings => {
+        if (ratings.length === 0 ){
+            res.send(JSON.stringify({numRatings: 0}))
+        }else{
+            res.send(JSON.stringify({numRatings: ratings.length}))
+        }
+    });
+});
+
 module.exports = router;

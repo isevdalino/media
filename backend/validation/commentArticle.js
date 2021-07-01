@@ -12,7 +12,7 @@ module.exports = function validateCommentArticleInput(reqData,bodyData) {
     }
 
     if (Validator.isEmpty(bodyData.comment)) {
-        errors.articleId = "comment param is required";
+        errors.comment = "comment param is required";
     }
 
     return {

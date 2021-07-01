@@ -2,7 +2,7 @@ import { getReadableDateTime } from "../../constants/common";
 import { SEARCH } from "../../constants/Paths";
 import { articleViewContainerStyleSheet, photoStyleSheet, titleStyleSheet } from "../articles/articlesStyles";
 import ReactStars from "react-rating-stars-component";
-import { fetchRating, postRating } from "../../server-requests/requests";
+import { fetchRating, postRating, fetchNumRating } from "../../server-requests/requests";
 import { onLogoutClick } from '../login/logoutHandler';
 import { SIGN_IN } from "../../constants/Paths";
 import React, { useEffect, useState } from "react";
@@ -20,7 +20,8 @@ function PhotoArticleView({ photoArticle,isUserLoggedInState,setIsUserLoggedInSt
     let [rating, setRating] = useState(0);
     let { id } = useParams();
     const history = useHistory();
-  
+    let [numRatings, setNumRatings] = useState(0);
+
     const validateNewRating = function (value) {
       return {
         size: 40,
@@ -36,6 +37,8 @@ function PhotoArticleView({ photoArticle,isUserLoggedInState,setIsUserLoggedInSt
     useEffect(() => {
       fetchRating(id)
         .then(data => setRating(data.rating));
+      fetchNumRating(id)
+        .then(data => setNumRatings(data.numRatings))
     }, [ratingView]);
   
   
@@ -65,6 +68,9 @@ function PhotoArticleView({ photoArticle,isUserLoggedInState,setIsUserLoggedInSt
             <ReactStars {...ratingView} onChange={(value) => onChangeRating(value)} />
             <div style={midRatingStyle}>
                 Rating: {rating}/10.0
+            </div>
+            <div style={midRatingStyle}>
+                Votes: {numRatings}
             </div>
         </div>
     );

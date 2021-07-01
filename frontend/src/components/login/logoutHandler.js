@@ -1,5 +1,4 @@
-import { USER_EMAIL_LOCAL_STORAGE_KEY, USER_LOGIN_TOKEN_LOCAL_STORAGE_KEY } from "../../constants/constants";
-import { HOME } from "../../constants/Paths";
+import { USER_LOGIN_TOKEN_LOCAL_STORAGE_KEY,USER_EMAIL_LOCAL_STORAGE_KEY } from "../../constants/constants";
 
 function onLogoutClick(history,page, setIsUserLoggedInState) {
     console.log("Logout ...");
@@ -10,8 +9,7 @@ function onLogoutClick(history,page, setIsUserLoggedInState) {
 };
 
 function isUserLoggedIn() {
-    return localStorage.getItem(USER_LOGIN_TOKEN_LOCAL_STORAGE_KEY) != null &&
-        localStorage.getItem(USER_EMAIL_LOCAL_STORAGE_KEY) != null;
+    return localStorage.getItem(USER_LOGIN_TOKEN_LOCAL_STORAGE_KEY) != null;
 }
 
 function loginVisibilityStyleSheet(isUserLoggedIn) {

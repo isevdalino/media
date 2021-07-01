@@ -8,6 +8,7 @@ import { commentItemStyle } from "./commentStyles";
 function CreateCommentView({ articleId, setOnCommentAdded,setIsUserLoggedInState }) {
     const [commentData, setCommentData] = useState({});
     const history = useHistory();
+    const [errorMessage, setErrorMessage] = useState('');
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -15,7 +16,9 @@ function CreateCommentView({ articleId, setOnCommentAdded,setIsUserLoggedInState
             .then(data => {
                 if(data.status == 403){
                     onLogoutClick(history,SIGN_IN, setIsUserLoggedInState) 
-                }else{
+                }else if (data.status == 400) {
+                    data.json().then(data => {setErrorMessage(data.comment)})
+                  }else{
                     setOnCommentAdded(data);
                     return data;
                 }
@@ -45,6 +48,9 @@ function CreateCommentView({ articleId, setOnCommentAdded,setIsUserLoggedInState
                 <textarea rows="2" cols="50" name="newComment" style={commentItemStyle} placeholder="Comment..." type="text" noValidate onBlur={handleChange} />
                 <input style={buttonStyle} type="submit" />
             </form>
+            {errorMessage && (
+                            <p className="error"> {errorMessage} </p>
+                        )}
         </div>
     );
 }
